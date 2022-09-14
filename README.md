@@ -7,7 +7,7 @@ Eagle Eye is a simple, easy to use tennis line call system that is deployed whil
 # Team Members
 - Athena Evans
 - Chase Donovan Glasper
-- Liam HartLiam Hart
+- Liam Hart
 - Robert Stachurski
 - Thien H Le
 - Tyler Hyde
