@@ -1,0 +1,41 @@
+Local machines will need to have the apps nvidia cuda and nvidia cuDNN installed. The nvidia cuDNN requires a developer account, this is easy and free to sign up for with your temple email.
+
+If you want the libraries loccally (excluding the apps nvidia cuda and nvidia cuDNN) then here are the pip installs you need, pip default saves to c:\users\[you]\appdata\local\progras\python\python310\lib\site-packages for the latest version of pip.
+Use GitBash to use pip
+Use $ pip show [library name] to find where the libraries are if the path above doesn't work.
+
+$ python.exe -m pip install --update pip
+$ pip install tensorflow
+$ pip install matplotlib
+$ pip install opencv-python
+$ pip install pydot
+$ pip install graphviz
+
+Please check if the following libraries are installed using either $ pip show [library] or checking the file location:
+    [ ]absl-py
+    [ ]astunparse
+    [ ]flatbuffers
+    [ ]gast
+    [ ]google-pasta
+    [ ]grpcio
+    [ ]h5py
+    [ ]keras
+    [ ]keras-preprocessing
+    [ ]libclang
+    [ ]numpy
+    [ ]opt-einsum
+    [ ]packaging
+    [ ]protobuf
+    [ ]setuptools
+    [ ]six
+    [ ]tensorboard
+    [ ]tensorflow-estimator
+    [ ]tensorflow-io-gcs-filesystem
+    [ ]termcolor
+    [ ]typing-extensions
+    [ ]wrapt
+    [ ]matplotlib
+    [ ]pillow
+    [ ]opencv-python
+    [ ]pydot
+    [ ]graphviz
