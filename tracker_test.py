@@ -1,7 +1,7 @@
 import cv2
 
 tracker_types = ['BOOSTING', 'MIL','KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
-tracker_type = tracker_types[5]
+tracker_type = tracker_types[4]
 
 if tracker_type == 'BOOSTING':
     tracker = cv2.legacy.TrackerBoosting_create()
@@ -13,19 +13,22 @@ if tracker_type == 'TLD':
     tracker = cv2.legacy.TrackerTLD_create() 
 if tracker_type == 'MEDIANFLOW':
     tracker = cv2.legacy.TrackerMedianFlow_create() 
-if tracker_type == 'GOTURN':
-    tracker = cv2.TrackerGOTURN_create()
+# if tracker_type == 'GOTURN':
+#     tracker = cv2.TrackerGOTURN_create()
 if tracker_type == 'MOSSE':
     tracker = cv2.legacy.TrackerMOSSE_create()
 if tracker_type == "CSRT":
     tracker = cv2.TrackerCSRT_create()
 # Get the video file and read it
-video = cv2.VideoCapture("walking.mp4")
+# video = cv2.VideoCapture("overhead view tennis.mp4")
+# video = cv2.VideoCapture("table tennis sample.mov")
+video = cv2.VideoCapture("soccer.mov")
 ret, frame = video.read()
 
 frame_height, frame_width = frame.shape[:2]
 # Resize the video for a more convinient view
-frame = cv2.resize(frame, [frame_width//2, frame_height//2])
+# frame = cv2.resize(frame, [frame_width//2, frame_height//2])
+frame = cv2.resize(frame, [frame_width, frame_height])
 # Initialize video writer to save the results
 output = cv2.VideoWriter(f'{tracker_type}.avi', 
                          cv2.VideoWriter_fourcc(*'XVID'), 60.0, 
@@ -38,7 +41,7 @@ ret = tracker.init(frame, bbox)
 # Start tracking
 while True:
     ret, frame = video.read()
-    frame = cv2.resize(frame, [frame_width//2, frame_height//2])
+    # frame = cv2.resize(frame, [frame_width//2, frame_height//2])
     if not ret:
         print('something went wrong')
         break
