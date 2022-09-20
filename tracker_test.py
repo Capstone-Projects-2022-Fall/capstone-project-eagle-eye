@@ -1,7 +1,7 @@
 import cv2
 
 tracker_types = ['BOOSTING', 'MIL','KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'MOSSE', 'CSRT']
-tracker_type = tracker_types[4]
+tracker_type = tracker_types[2]
 
 if tracker_type == 'BOOSTING':
     tracker = cv2.legacy.TrackerBoosting_create()
@@ -22,7 +22,8 @@ if tracker_type == "CSRT":
 # Get the video file and read it
 # video = cv2.VideoCapture("overhead view tennis.mp4")
 # video = cv2.VideoCapture("table tennis sample.mov")
-video = cv2.VideoCapture("soccer.mov")
+# video = cv2.VideoCapture("soccer.mov")
+video = cv2.VideoCapture("pickleball.mov")
 ret, frame = video.read()
 
 frame_height, frame_width = frame.shape[:2]
