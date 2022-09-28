@@ -1,4 +1,4 @@
-# Created By : Tyler Hyde (26 September 2022)
+# Created By : Tyler Hyde (27 September 2022)
 import os
 import glob
 import sys
@@ -94,7 +94,10 @@ class App():
             # run script with prerecorded video
             detect.run(source=self.video_infile_name, view_img=True)
             # open the video we just ran, it will be in ../yolov5/runs/detect/* (* means all if need specific format then *.csv)
-            list_of_files = glob.glob("/Users/tyler/Documents/GitHub/capstone-project-eagle-eye/yolov5/runs/detect/*") 
+            # setting the root dir to ../ is basically the same as calling `cd ..` before looking for the pathname
+            # using the join to ensure its os agnostic, on a mac it puts '/' on windows it uses '\' to build the path
+            pathname = os.path.join(os.getcwd(), 'yolov5', 'runs', 'detect', '*' )  
+            list_of_files = glob.glob(pathname=pathname, root_dir="../")
             latest_file = max(list_of_files, key=os.path.getctime)
             try:
                 # try to open the file in windows
@@ -102,7 +105,7 @@ class App():
             except AttributeError:
                 # else we try a unix os command for linux and mac
                 os.system(f"open {latest_file}")
-            else:
+            except:
                 messagebox.showerror(title='Could not open video file', message="Could not open video file.")
                 self.root.mainloop()
         else:
