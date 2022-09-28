@@ -31,14 +31,30 @@ class App():
         self.tb_video_infile = None
 
         # mode radio buttons
-        self.rb_LIVE_mode = None
-        self.rb_PRERECORDED_mode = None
+        # self.rb_LIVE_mode = None
+        # self.rb_PRERECORDED_mode = None
+        self.dd_mode_options = [
+            "Live",
+            "Prerecorded"
+        ]
+        self.dd_sports_options = [
+            "Tennis",
+            "Soccer",
+            "Basketball",
+            "Baseball",
+            "Hockey",
+            "Ping Pong"
+        ]
  
         # Video input string -> For API
-        self.video_infile_name = ""           
+        self.video_infile_name = StringVar()           
         
         # file type selected: 1 is live, 2 is prerecorded
-        self.mode_checked = IntVar()
+        # self.mode_checked = IntVar()
+        self.mode_checked = StringVar()
+        self.mode_checked.set("Live")
+        self.sport_checked = StringVar()
+        self.sport_checked.set("Tennis")
  
     def start(self):
         '''
@@ -62,10 +78,12 @@ class App():
         video_infile_label.config(bg='#ffffff')
        
         # radio buttons
-        self.rb_LIVE_mode = Radiobutton(self.root, text="Live Mode", variable = self.mode_checked, value=1)
-        self.rb_LIVE_mode.config(bg='#ffffff', fg='#000000', font=('Arial', 12))
-        self.rb_PRERECORDED_mode = Radiobutton(self.root, text="Prerecorded Mode", variable = self.mode_checked, value=2)
-        self.rb_PRERECORDED_mode.config(bg='#ffffff', fg='#000000', font=('Arial', 12))
+        # self.rb_LIVE_mode = Radiobutton(self.root, text="Live Mode", variable = self.mode_checked, value=1)
+        # self.rb_LIVE_mode.config(bg='#ffffff', fg='#000000', font=('Arial', 12))
+        # self.rb_PRERECORDED_mode = Radiobutton(self.root, text="Prerecorded Mode", variable = self.mode_checked, value=2)
+        # self.rb_PRERECORDED_mode.config(bg='#ffffff', fg='#000000', font=('Arial', 12))
+        self.mode_dropdown = OptionMenu( self.root, self.mode_checked, *self.dd_mode_options)
+        self.sport_dropdown = OptionMenu( self.root, self.sport_checked, *self.dd_sports_options)
  
         # Enter button
         button_enter = tk.Button(text = "Execute", command = self.enter, fg='#000000', font=('Arial', 12))
@@ -82,15 +100,19 @@ class App():
 
         # add a label for the mode
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
-        self.rb_LIVE_mode.grid(row=7, column=2)
-        self.rb_PRERECORDED_mode.grid(row=7, column=3)
+        # self.rb_LIVE_mode.grid(row=7, column=2)
+        # self.rb_PRERECORDED_mode.grid(row=7, column=3)
+        self.mode_dropdown.grid(row=7, column=2)
+
+        tk.Label(self.root, bg='#ffffff', text="Choose Sport:", fg='#000000', font=('Arial', 12)).grid(row=8, column=1)
+        self.sport_dropdown.grid(row=8, column=2)
  
         # add the buttons
         button_enter.grid(row=16, column=2)
         button_exit.grid(row = 17, column = 2)
  
         #set the defaults for the radio buttons 
-        self.rb_LIVE_mode.select()
+        # self.rb_LIVE_mode.select()
 
         # Start the main loop
         self.root.mainloop()
@@ -100,8 +122,8 @@ class App():
         Function that is triggered when "Enter" is pressed
         '''
         # check infile, if none was given restart
-        if self.mode_checked == 2:
-            self.check_infile()
+        if self.mode_checked.get() == "Prerecorded":
+            self.get_infile()
             # run script with prerecorded video
         else:
             # run script with live feed
@@ -139,21 +161,31 @@ class App():
     #         elif self.mode_checked.get() ==2: #STAD was checked
     #             stad2csv(logger, outputfileType, self.writer, infile=self.video_infile_name, logDir=file)   
               
-    def check_infile(self):
-        # check infile, if none was given restart
-        print("you made it to check infile")
-        if self.tb_video_infile.get() == "":
+    def get_infile(self):
+        # ask the user to provide a prerecorded video
+        self.video_infile_name = filedialog.askopenfilename()
+        # check that they actually chose one, if not restart 
+        if self.video_infile_name == "":
             messagebox.showerror(title='Input File', message="You must provide an input file.")
             self.root.mainloop()
+        else:
+            # check if its a valid file
+            if os.path.exists(self.video_infile_name):
+                # file is good
+                pass
+            else: 
+                messagebox.showerror(title='Invalid File', message="Invalid filename, please choose another input file.")
+                self.root.mainloop()
+            print(self.video_infile_name)
+            pass
  
     def do_cleanup(self):
-        print("you made it to do_cleanup")
         # do a final sweep of the text boxes to make sure they are clear 
-        self.tb_video_infile.delete(0, 'end') # deletes the text in each box
+        self.video_infile_name = ""
+        print(self.video_infile_name)
 
 
-
-        self.video_infile_name = ''
+        # self.video_infile_name = ''
 
 
         #reset stdout
