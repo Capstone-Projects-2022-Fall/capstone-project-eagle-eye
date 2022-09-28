@@ -1,4 +1,5 @@
 # Created By : Tyler Hyde (27 September 2022)
+from logging import error
 import os
 import glob
 import sys
@@ -92,7 +93,10 @@ class App():
             # get the file from the user
             self.get_infile()
             # run script with prerecorded video
-            detect.run(source=self.video_infile_name, view_img=True)
+            try:
+                detect.run(source=self.video_infile_name, view_img=True)
+            except Exception as e:
+                self.error_message(e)
             # open the video we just ran, it will be in ../yolov5/runs/detect/* (* means all if need specific format then *.csv)
             # setting the root dir to ../ is basically the same as calling `cd ..` before looking for the pathname
             # using the join to ensure its os agnostic, on a mac it puts '/' on windows it uses '\' to build the path
@@ -105,13 +109,14 @@ class App():
             except AttributeError:
                 # else we try a unix os command for linux and mac
                 os.system(f"open {latest_file}")
-            except:
-                messagebox.showerror(title='Could not open video file', message="Could not open video file.")
-                self.root.mainloop()
+            except Exception as e:
+                self.error_message(e)
         else:
             # run script with live feed
-            detect.run(source=0)
-            pass
+            try:
+                detect.run(source=0)
+            except Exception as e:
+                self.error_message(e)
         self.do_cleanup()
              
     def get_infile(self):
@@ -123,17 +128,17 @@ class App():
             self.root.mainloop()
         else:
             # check if its a valid file
-            if os.path.exists(self.video_infile_name):
-                # file is good
-                pass
-            else: 
-                messagebox.showerror(title='Invalid File', message="Invalid filename, please choose another input file.")
-                self.root.mainloop()
-            print(self.video_infile_name)
-            pass
+            try:
+                os.path.exists(self.video_infile_name)
+            except Exception as e:
+                self.error_message(e)
  
     def do_cleanup(self):
         # clear any variables that were filled 
         self.video_infile_name = "" 
+    
+    def error_message(self, error):
+        messagebox.showerror(title='Error Message', message=f"{error}")
+        self.root.mainloop()
  
 App(290,200).start()
