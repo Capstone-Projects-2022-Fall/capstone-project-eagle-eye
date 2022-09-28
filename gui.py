@@ -1,18 +1,12 @@
-# Created By : Tyler Hyde (1 July 2021)
- 
-import logging
+# Created By : Tyler Hyde (26 September 2022)
 import os
+import glob
 import sys
 import tkinter as tk
-from tkinter import Radiobutton, filedialog, messagebox, IntVar
+from tkinter import filedialog, messagebox
 from tkinter import *
-import tkinter
 from tkinter.constants import LEFT, W
-from PIL import ImageTk, Image
-from tkinter.simpledialog import askstring
-# from tkinter.messagebox import showinfo
-from pandas import *
-import pandas
+from yolov5 import detect
  
 class App():
 
@@ -72,10 +66,10 @@ class App():
         heading.config(font = ('Arial', 14), bg='#ffffff', fg='#000000')
  
         # Infile
-        video_infile_label = tk.Label(self.root, text = "Prerecorded Input File:", fg='#000000', font=('Arial', 12))                                  # Label
-        self.tb_video_infile = tk.Entry(self.root, text = "Prerecorded Input File", width=40)                                      # Input Box
-        video_infile_explore = tk.Button(self.root, text = "Browse", command = self.browse_infiles, fg='#000000', font=('Arial', 12))                          # Browse Button
-        video_infile_label.config(bg='#ffffff')
+        # video_infile_label = tk.Label(self.root, text = "Prerecorded Input File:", fg='#000000', font=('Arial', 12))                                  # Label
+        # self.tb_video_infile = tk.Entry(self.root, text = "Prerecorded Input File", width=40)                                      # Input Box
+        # video_infile_explore = tk.Button(self.root, text = "Browse", command = self.browse_infiles, fg='#000000', font=('Arial', 12))                          # Browse Button
+        # video_infile_label.config(bg='#ffffff')
        
         # radio buttons
         # self.rb_LIVE_mode = Radiobutton(self.root, text="Live Mode", variable = self.mode_checked, value=1)
@@ -94,9 +88,9 @@ class App():
         heading.grid(row=0, column=2)
 
         # add the label, textbox, and button for the input file 
-        video_infile_label.grid(row=5, column=1)
-        self.tb_video_infile.grid(row=5, column=2)
-        video_infile_explore.grid (row = 5, column = 3)
+        # video_infile_label.grid(row=5, column=1)
+        # self.tb_video_infile.grid(row=5, column=2)
+        # video_infile_explore.grid (row = 5, column = 3)
 
         # add a label for the mode
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
@@ -110,9 +104,6 @@ class App():
         # add the buttons
         button_enter.grid(row=16, column=2)
         button_exit.grid(row = 17, column = 2)
- 
-        #set the defaults for the radio buttons 
-        # self.rb_LIVE_mode.select()
 
         # Start the main loop
         self.root.mainloop()
@@ -123,44 +114,29 @@ class App():
         '''
         # check infile, if none was given restart
         if self.mode_checked.get() == "Prerecorded":
+            # get the file from the user
             self.get_infile()
             # run script with prerecorded video
+            detect.run(source=self.video_infile_name, view_img=True)
+            # open the video we just ran, it will be in ../yolov5/runs/detect/* (* means all if need specific format then *.csv)
+            list_of_files = glob.glob("/Users/tyler/Documents/GitHub/capstone-project-eagle-eye/yolov5/runs/detect/*") 
+            latest_file = max(list_of_files, key=os.path.getctime)
+            try:
+                # try to open the file in windows
+                os.startfile(latest_file)
+            except AttributeError:
+                # else we try a unix os command for linux and mac
+                os.system(f"open {latest_file}")
+            else:
+                messagebox.showerror(title='Could not open video file', message="Could not open video file.")
+                self.root.mainloop()
+            
         else:
             # run script with live feed
+            detect.run(source=0)
             pass
-        
-        # # otherwise the user gave a single file so just do that one
-        # elif self.tb_video_infile:
-        #     isdir = 0
-        #     self.switch(logger, file, isdir, self.outputfileType_checked.get())
-        # else:
-        #     # something went wrong/general catch all (this should never happen but just in case restart the loop)
-        #     messagebox.showerror(title='Input Error', message="You must provide either an input file or directory.")
         self.do_cleanup()
- 
-    # define the browse buttons and their actions when pressed (theyre set up in start())
-    def browse_infiles(self):
-        self.video_infile_name = filedialog.askopenfilename()
-        self.tb_video_infile.insert(0, self.video_infile_name)
-
-    # def switch(self, logger, file, isdir, outputfileType):
-    #     # grab either the indir or infile based on the passed flag from earlier and set the infile_name accordingly
-    #     if isdir == 0:
-    #         self.video_infile_name = self.tb_video_infile.get()
-    #     elif isdir ==1:
-    #         self.video_infile_name = self.tb_indir.get()
-    #     self.outfile_name = self.tb_outfile.get()
-    #     if os.path.exists(self.outfile_name) and os.path.exists(self.video_infile_name): # if an outfile was given go down this path
-    #         if self.mode_checked.get() ==1: # SE16 was checked
-    #             table2csv(logger, outputfileType, self.writer, infile=self.video_infile_name,outfile=self.outfile_name, logDir=file).main()
-    #         elif self.mode_checked.get() ==2: #STAD was checked
-    #             stad2csv(logger, outputfileType, self.writer, infile=self.video_infile_name, outfile=self.outfile_name, logDir=file)
-    #     elif os.path.exists(self.video_infile_name): #no outfile was given
-    #         if self.mode_checked.get() ==1: # SE16 was checked
-    #             table2csv(logger, outputfileType, self.writer, infile=self.video_infile_name, logDir=file).main()
-    #         elif self.mode_checked.get() ==2: #STAD was checked
-    #             stad2csv(logger, outputfileType, self.writer, infile=self.video_infile_name, logDir=file)   
-              
+             
     def get_infile(self):
         # ask the user to provide a prerecorded video
         self.video_infile_name = filedialog.askopenfilename()
@@ -180,20 +156,7 @@ class App():
             pass
  
     def do_cleanup(self):
-        # do a final sweep of the text boxes to make sure they are clear 
-        self.video_infile_name = ""
-        print(self.video_infile_name)
-
-
-        # self.video_infile_name = ''
-
-
-        #reset stdout
-
-        #reset the debug and workbook flags
-
-
-
+        # clear any variables that were filled 
+        self.video_infile_name = "" 
  
- 
-App(700,400).start()
+App(290,200).start()
