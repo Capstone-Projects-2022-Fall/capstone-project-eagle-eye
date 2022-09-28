@@ -73,7 +73,6 @@ class App():
         # add mode and sports selection dropdown and labels
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
         self.mode_dropdown.grid(row=7, column=2)
-
         tk.Label(self.root, bg='#ffffff', text="Choose Sport:", fg='#000000', font=('Arial', 12)).grid(row=8, column=1)
         self.sport_dropdown.grid(row=8, column=2)
  
