@@ -11,39 +11,47 @@ from tkinter.constants import LEFT, W
 from yolov5 import detect
  
 class App():
+   # Tkinter root
+    root = tkinter.Tk()
+
+    # Define the background color
+    root.config(bg='#ffffff')
+
+    # drop down options
+    dd_mode_options = [
+        "Live",
+        "Prerecorded"
+    ]
+    dd_sports_options = [
+        "Tennis",
+        "Soccer",
+        "Basketball",
+        "Baseball",
+        "Hockey",
+        "Ping Pong"
+    ]
+
+    # Variables for the input file name, mode, and sport
+    video_infile_name = StringVar()           
+    mode_checked = StringVar()
+    sport_checked = StringVar()
+
+    # set defaults for the dropdown menus 
+    mode_checked.set("Live")
+    sport_checked.set("Tennis")
+
+    # Set window title
+    root.title('Eagle Eye')
+
+    # dropdown menus
+    mode_dropdown = OptionMenu( root, mode_checked, *dd_mode_options)
+    sport_dropdown = OptionMenu( root, sport_checked, *dd_sports_options)
 
     def __init__(self, width, height):
-        # Tkinter root
-        self.root = tkinter.Tk()
-
-        # Define the width, height, and background color
+        # define the width and height
         self.width = width
         self.height = height
-        self.root.config(bg='#ffffff')
 
-        # drop down options
-        self.dd_mode_options = [
-            "Live",
-            "Prerecorded"
-        ]
-        self.dd_sports_options = [
-            "Tennis",
-            "Soccer",
-            "Basketball",
-            "Baseball",
-            "Hockey",
-            "Ping Pong"
-        ]
- 
-        # Variables for the input file name, mode, and sport
-        self.video_infile_name = StringVar()           
-        self.mode_checked = StringVar()
-        self.sport_checked = StringVar()
-
-        # set defaults for the dropdown menus 
-        self.mode_checked.set("Live")
-        self.sport_checked.set("Tennis")
- 
     def start(self):
         '''
         Main starter function that handles all processes
@@ -52,25 +60,12 @@ class App():
         g = "{width}x{height}".format(width=self.width, height=self.height)
         self.root.geometry(g)
  
-        # Set window title
-        self.root.title('Eagle Eye')
- 
-        # Heading
-        # heading = tk.Label(self.root, text = "Eagle Eye")
-        # heading.config(font = ('Arial', 14), bg='#ffffff', fg='#000000')
- 
-        # dropdown menus
-        self.mode_dropdown = OptionMenu( self.root, self.mode_checked, *self.dd_mode_options)
-        self.sport_dropdown = OptionMenu( self.root, self.sport_checked, *self.dd_sports_options)
- 
         # Enter button
         button_enter = tk.Button(text = "Execute", command = self.enter, fg='#000000', font=('Arial', 12))
         # Exit button
         button_exit = tk.Button(self.root, text = "Exit", command = sys.exit, fg='#000000', font=('Arial', 12))
  
-        # ---- Grid ---------------------------------------------------------------------------------------------------------------------------
-        # heading.grid(row=0, column=2)
-
+        # ---- Grid -----------
         # add mode and sports selection dropdown and labels
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
         self.mode_dropdown.grid(row=7, column=2)
