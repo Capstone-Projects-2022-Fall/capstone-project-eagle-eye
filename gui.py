@@ -69,7 +69,7 @@ class App():
         # Enter button
         button_enter = tk.Button(self.root, text = "Execute", command = self.enter, fg='#000000', font=('Arial', 12))
         # Exit button
-        button_exit = tk.Button(self.root, text = "Exit", command = self.stop, fg='#000000', font=('Arial', 12))
+        button_exit = tk.Button(self.root, text = "Exit", command = sys.exit, fg='#000000', font=('Arial', 12))
         # ---- Grid -----------
         # add mode and sports selection dropdown and labels
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
@@ -83,10 +83,6 @@ class App():
     def start(self):
         """Start the mainloop of the tkinter instance i.e. start the GUI"""
         self.root.mainloop()
-
-    def stop(self):
-        """Stop the execution of the GUI"""
-        sys.exit
 
     def enter(self):
         """Executes when the enter button is pressed
