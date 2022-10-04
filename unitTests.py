@@ -4,7 +4,7 @@ import gui
 class TestGUI(unittest.TestCase):
     """Tests all testable parts of the GUI
     
-    Due to the nature of the tkinter program unit testing is limited. Anything with root.mainloop() puases execution and waits 
+    Due to the nature of the tkinter program unit testing is limited. Anything with root.mainloop() pauses execution and waits 
     for input. Because of this we can only test functionality/functions without this behavior. 
     """
     def test_mode(self):
