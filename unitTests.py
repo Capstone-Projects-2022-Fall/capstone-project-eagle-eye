@@ -38,11 +38,6 @@ class TestGUI(unittest.TestCase):
         self.assertEqual(testGui.video_infile_name.get(), "test/file/name")
         testGui.do_cleanup()
         self.assertEqual(testGui.video_infile_name.get(), "")
-    def test_error(self):
-        testGui = gui.App(290,200)
-        testGui.error_message(error="this is an error message")
-        testGui.stop()
-        pass
 
 if __name__ == '__main__':
     unittest.main()
