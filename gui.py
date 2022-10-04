@@ -11,10 +11,22 @@ from tkinter.constants import LEFT, W
 from yolov5 import detect
  
 class App():
-    # Class variables
-    # Tkinter root
+    """GUI class
+
+    This class gives the user a GUI which offers an easy way to interact with the detect
+    script and our custom trained models. 
+    
+    Attributes:
+        root: Tkinter instance
+        dd_mode_options (list): List of mode options available 
+        dd_sports_options (list): List of sports options available 
+        video_infile_name (StringVar): String variable for the pre recorded file name. Defaults to ""
+        mode_checked (StringVar): String variable for the selected mode. Defaults to ""
+        sport_checked (StringVar): String variable for the selected sport. Defaults to ""
+        mode_dropdown (OptionMenu): Drop down menu that contians the dd_mode_options
+        sport_dropdown (OptionMenu): Drop down menu that contians the dd_sports_options
+    """
     root = tkinter.Tk()
-    # drop down options
     dd_mode_options = [
         "Live",
         "Prerecorded"
@@ -27,16 +39,23 @@ class App():
         "Hockey",
         "Ping Pong"
     ]
-    # Variables for the input file name, mode, and sport
     video_infile_name = StringVar()           
     mode_checked = StringVar()
     sport_checked = StringVar()
-    # dropdown menus
     mode_dropdown = OptionMenu(root, mode_checked, *dd_mode_options)
     sport_dropdown = OptionMenu(root, sport_checked, *dd_sports_options)
 
-    # Instance variables
     def __init__(self, width, height):
+        """Sets up instance variables
+
+        Attributes: 
+            button_enter (tk.Button): Button to initiate program
+            button_exit (tk.Button): Button to exit program
+
+        Args:
+            width (int): Width of the GUI window 
+            height (int): Height of the GUI window 
+        """
         # Set window size
         g = "{width}x{height}".format(width=width, height=height)
         self.root.geometry(g)
@@ -50,25 +69,31 @@ class App():
         # Enter button
         button_enter = tk.Button(self.root, text = "Execute", command = self.enter, fg='#000000', font=('Arial', 12))
         # Exit button
-        button_exit = tk.Button(self.root, text = "Exit", command = sys.exit, fg='#000000', font=('Arial', 12))
+        button_exit = tk.Button(self.root, text = "Exit", command = self.stop, fg='#000000', font=('Arial', 12))
         # ---- Grid -----------
         # add mode and sports selection dropdown and labels
         tk.Label(self.root, bg='#ffffff', text="Choose input type:", fg='#000000', font=('Arial', 12)).grid(row=7, column=1)
         self.mode_dropdown.grid(row=7, column=2)
         tk.Label(self.root, bg='#ffffff', text="Choose Sport:", fg='#000000', font=('Arial', 12)).grid(row=8, column=1)
         self.sport_dropdown.grid(row=8, column=2)
-        # add buttons
+        # add buttons to grid
         button_enter.grid(row=16, column=2)
         button_exit.grid(row = 17, column = 2)
 
     def start(self):
-        # Start the main loop
+        """Start the mainloop of the tkinter instance i.e. start the GUI"""
         self.root.mainloop()
- 
+
+    def stop(self):
+        """Stop the execution of the GUI"""
+        sys.exit
+
     def enter(self):
-        '''
-        Function that is triggered when "Enter" is pressed
-        '''
+        """Executes when the enter button is pressed
+
+        First we check what the mode is and based on that wither start the detect script accordingly. 
+        If we are in prerecorded mode ask the user what file they want to open
+        """
         # check infile, if none was given restart
         if self.mode_checked.get() == "Prerecorded":
             # get the file from the user
@@ -101,6 +126,7 @@ class App():
         self.do_cleanup()
              
     def get_infile(self):
+        """Get the file to analyze from the user using a dialog box pop up"""
         # ask the user to provide a prerecorded video
         self.video_infile_name = filedialog.askopenfilename()
         # check that they actually chose one, if not restart 
@@ -115,10 +141,15 @@ class App():
                 self.error_message(e)
  
     def do_cleanup(self):
-        # clear any variables that were filled 
-        self.video_infile_name = "" 
+        """Resets any variables that have been set"""
+        self.video_infile_name.set("") 
     
     def error_message(self, error):
+        """Display any error that is raised in a pop up window and restart the main loop
+        
+        Args: 
+            error (Exception): The error that was raised or a string. 
+        """
         messagebox.showerror(title='Error Message', message=f"{error}")
         self.root.mainloop()
  
