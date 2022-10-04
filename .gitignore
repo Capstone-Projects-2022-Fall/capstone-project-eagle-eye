@@ -164,6 +164,8 @@ cython_debug/
 *.avi
 *.prototxt
 *.mp4
+# do NOT ignore the testing video 
+!pickleball_for_testing.mp4
 
 
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
