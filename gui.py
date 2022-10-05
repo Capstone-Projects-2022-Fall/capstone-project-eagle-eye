@@ -102,8 +102,14 @@ class App():
             # open the video we just ran, it will be in ../yolov5/runs/detect/* (* means all if need specific format then *.csv)
             # setting the root dir to ../ is basically the same as calling `cd ..` before looking for the pathname
             # using the join to ensure its os agnostic, on a mac it puts '/' on windows it uses '\' to build the path
-            pathname = os.path.join(os.getcwd(), 'yolov5', 'runs', 'detect', '*' )  
+            pathname = os.path.join(os.getcwd(), 'yolov5', 'runs', 'detect', '*' )
             list_of_files = glob.glob(pathname=pathname, root_dir="../")
+            if not list_of_files: #if we cant find the default run location look in the root 
+                pathname = os.path.join(os.getcwd(), 'runs', 'detect', '*' )
+                list_of_files = glob.glob(pathname=pathname, root_dir="../")
+                if not list_of_files:
+                    pathname = filedialog.askdirectory(message = "Please select the most recent directory in the run folder")
+                    list_of_files = glob.glob(pathname=pathname)
             latest_file = max(list_of_files, key=os.path.getctime)
             try:
                 # try to open the file in windows
@@ -138,7 +144,7 @@ class App():
  
     def do_cleanup(self):
         """Resets any variables that have been set"""
-        self.video_infile_name.set("") 
+        self.video_infile_name.set("")
     
     def error_message(self, error):
         """Display any error that is raised in a pop up window and restart the main loop

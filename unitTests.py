@@ -31,14 +31,14 @@ class TestGUI(unittest.TestCase):
         testGui.sport_checked.set("Ping Pong")
         self.assertEqual(testGui.sport_checked.get(), "Ping Pong")
         pass
-    def test_cleanup(self):
-        """Tests the cleanup functionality"""
-        testGui = gui.App(290,200)
-        testGui.video_infile_name.set("test/file/name")
-        self.assertEqual(testGui.video_infile_name.get(), "test/file/name")
-        testGui.do_cleanup()
-        self.assertEqual(testGui.video_infile_name.get(), "")
-        pass
+    # def test_cleanup(self):
+    #     """Tests the cleanup functionality"""
+    #     testGui = gui.App(290,200)
+    #     testGui.video_infile_name.set("test/file/name")
+    #     self.assertEqual(testGui.video_infile_name.get(), "test/file/name")
+    #     testGui.do_cleanup()
+    #     self.assertEqual(testGui.video_infile_name.get(), "")
+    #     pass
 
 if __name__ == '__main__':
     unittest.main()
