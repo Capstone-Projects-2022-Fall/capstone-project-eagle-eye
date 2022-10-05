@@ -1,6 +1,9 @@
 # YOLOv5 requirements
 # Usage: pip install -r requirements.txt
 
+# YOLOv5 repo itself
+# git clone https://github.com/ultralytics/yolov5.git
+
 # Base ----------------------------------------
 matplotlib>=3.2.2
 numpy>=1.18.5
@@ -46,5 +49,5 @@ thop>=0.1.1  # FLOPs computation
 # pycocotools>=2.0  # COCO mAP
 # roboflow
 
-# YOLOv5 repo itself
-# git clone https://github.com/ultralytics/yolov5.git
+# Unit Testing
+unittest

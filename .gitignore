@@ -164,6 +164,8 @@ cython_debug/
 *.avi
 *.prototxt
 *.mp4
+# do NOT ignore the testing video 
+!pickleball_for_testing.mp4
 
 
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
@@ -422,6 +424,4 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
-# ignore yolo, it will be local
-/yolov5
+yolov5
