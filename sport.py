@@ -5,9 +5,18 @@ class Sport(ABC):
 
     @property
     def model(self):
-        return f"model of {self.sportname}.pt"
-
+        return f"modelof{self.sportname}.pt"
+    @property
+    def field(self):
+        return f"fieldof{self.sportname}.pt"
     @abstractmethod
     def printname(self):
+        pass
+    
+    @abstractmethod
+    def setmodeloptions(model):
+        pass
+    @abstractmethod
+    def setfieldoptions(model):
         pass
 
