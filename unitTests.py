@@ -4,7 +4,7 @@ from soccer import Soccer
 from tennis import Tennis
 from basketball import BasketBall
 
-class TestGUIandSports(unittest.TestCase):
+class TestSuite(unittest.TestCase):
     """Tests all testable parts of the GUI and the sport classes
     
     Due to the nature of the tkinter program unit testing is limited. Anything with root.mainloop() pauses execution and waits 
@@ -58,14 +58,6 @@ class TestGUIandSports(unittest.TestCase):
         self.assertEqual(basketball.setmodeloptions(basketball.model),"changing model options with modelofbasketball.pt")
         self.assertEqual(basketball.sendscript(basketball.model), "modelofbasketball.pt")
         pass
-    # def test_cleanup(self):
-    #     """Tests the cleanup functionality"""
-    #     testGui = gui.App(290,200)
-    #     testGui.video_infile_name.set("test/file/name")
-    #     self.assertEqual(testGui.video_infile_name.get(), "test/file/name")
-    #     testGui.do_cleanup()
-    #     self.assertEqual(testGui.video_infile_name.get(), "")
-    #     pass
 
 if __name__ == '__main__':
     unittest.main()
