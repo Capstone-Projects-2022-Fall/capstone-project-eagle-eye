@@ -12,6 +12,10 @@ class BasketBall(Sport):
 
     def setfieldoptions(self,field):
         print(f"changing field options with {field}")
+    
+    def sendscript(self, model):
+        return model
+
 basketball = BasketBall('basketball')
 
 basketball.printname()

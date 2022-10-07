@@ -12,6 +12,10 @@ class Tennis(Sport):
 
     def setfieldoptions(self,field):
         print(f"changing field options with {field}")
+        
+    def sendscript(self, model):
+        return model
+    
 tennis = Tennis('tennis')
 
 tennis.printname()

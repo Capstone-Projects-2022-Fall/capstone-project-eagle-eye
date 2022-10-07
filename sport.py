@@ -20,3 +20,6 @@ class Sport(ABC):
     def setfieldoptions(model):
         pass
 
+    @abstractmethod
+    def sendscript(model):
+        pass
