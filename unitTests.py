@@ -1,17 +1,11 @@
 import unittest
 import gui
+from soccer import Soccer
 from tennis import Tennis
+from basketball import BasketBall
 
-class TestSports(unittest.TestCase):
-    def Test_Tennis(self):
-        tennis = Tennis('tennis')
-        self.assertEqual(tennis.printname, "tennis")
-        self.assertEqual(tennis.model, "modeloftennis.pt")
-        self.assertEqual(tennis.setmodeloptions(tennis.model),"changing model options with modelofsoccer.pt")
-        pass
-
-class TestGUI(unittest.TestCase):
-    """Tests all testable parts of the GUI
+class TestGUIandSports(unittest.TestCase):
+    """Tests all testable parts of the GUI and the sport classes
     
     Due to the nature of the tkinter program unit testing is limited. Anything with root.mainloop() pauses execution and waits 
     for input. Because of this we can only test functionality/functions without this behavior. 
@@ -39,6 +33,27 @@ class TestGUI(unittest.TestCase):
         self.assertEqual(testGui.sport_checked.get(), "Hockey")
         testGui.sport_checked.set("Ping Pong")
         self.assertEqual(testGui.sport_checked.get(), "Ping Pong")
+        pass
+    def test_tennis(self):
+        tennis = Tennis('tennis')
+        self.assertEqual(tennis.printname(), "tennis")
+        self.assertEqual(tennis.model, "modeloftennis.pt")
+        self.assertEqual(tennis.setmodeloptions(tennis.model),"changing model options with modeloftennis.pt")
+        self.assertEqual(tennis.sendscript(tennis.model), "modeloftennis.pt")
+
+    def test_soccer(self):
+        soccer = Soccer('soccer')
+        self.assertEqual(soccer.printname(), "soccer")
+        self.assertEqual(soccer.model, "modelofsoccer.pt")
+        self.assertEqual(soccer.setmodeloptions(soccer.model),"changing model options with modelofsoccer.pt")
+        self.assertEqual(soccer.sendscript(soccer.model), "modelofsoccer.pt")
+        pass
+    def test_basketball(self):
+        basketball = BasketBall('basketball')
+        self.assertEqual(basketball.printname(), "basketball")
+        self.assertEqual(basketball.model, "modelofbasketball.pt")
+        self.assertEqual(basketball.setmodeloptions(basketball.model),"changing model options with modelofbasketball.pt")
+        self.assertEqual(basketball.sendscript(basketball.model), "modelofbasketball.pt")
         pass
     # def test_cleanup(self):
     #     """Tests the cleanup functionality"""

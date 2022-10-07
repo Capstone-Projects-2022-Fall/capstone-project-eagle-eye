@@ -5,21 +5,21 @@ class Soccer(Sport):
         super().__init__(sportname)
 
     def printname(self):
-        print(self.sportname)
+        return self.sportname
     
     def setmodeloptions(self,model):
-        print(f"changing model options with {model}")
+        return f"changing model options with {model}"
 
     def setfieldoptions(self,field):
-        print(f"changing field options with {field}")
+        return f"changing field options with {field}"
 
     def sendscript(self, model):
         return model
-soccer = Soccer('soccer')
+# soccer = Soccer('soccer')
 
-soccer.printname()
-print(soccer.model)
-soccer.setmodeloptions(soccer.model)
-print(soccer.field)
-soccer.setfieldoptions(soccer.field)
+# soccer.printname()
+# print(soccer.model)
+# soccer.setmodeloptions(soccer.model)
+# print(soccer.field)
+# soccer.setfieldoptions(soccer.field)
 
