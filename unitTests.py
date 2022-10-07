@@ -35,6 +35,7 @@ class TestGUIandSports(unittest.TestCase):
         self.assertEqual(testGui.sport_checked.get(), "Ping Pong")
         pass
     def test_tennis(self):
+        """Tests the sport tennis"""
         tennis = Tennis('tennis')
         self.assertEqual(tennis.printname(), "tennis")
         self.assertEqual(tennis.model, "modeloftennis.pt")
@@ -42,6 +43,7 @@ class TestGUIandSports(unittest.TestCase):
         self.assertEqual(tennis.sendscript(tennis.model), "modeloftennis.pt")
 
     def test_soccer(self):
+        """Tests the sport soccer"""
         soccer = Soccer('soccer')
         self.assertEqual(soccer.printname(), "soccer")
         self.assertEqual(soccer.model, "modelofsoccer.pt")
@@ -49,6 +51,7 @@ class TestGUIandSports(unittest.TestCase):
         self.assertEqual(soccer.sendscript(soccer.model), "modelofsoccer.pt")
         pass
     def test_basketball(self):
+        """Tests the sport basketball"""
         basketball = BasketBall('basketball')
         self.assertEqual(basketball.printname(), "basketball")
         self.assertEqual(basketball.model, "modelofbasketball.pt")
