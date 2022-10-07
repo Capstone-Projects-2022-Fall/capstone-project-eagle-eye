@@ -16,11 +16,11 @@ class Tennis(Sport):
     def sendscript(self, model):
         return model
     
-tennis = Tennis('tennis')
+# tennis = Tennis('tennis')
 
-tennis.printname()
-print(tennis.model)
-tennis.setmodeloptions(tennis.model)
-print(tennis.field)
-tennis.setfieldoptions(tennis.field)
+# tennis.printname()
+# print(tennis.model)
+# tennis.setmodeloptions(tennis.model)
+# print(tennis.field)
+# tennis.setfieldoptions(tennis.field)
 
