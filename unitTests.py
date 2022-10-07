@@ -1,5 +1,14 @@
 import unittest
 import gui
+from tennis import Tennis
+
+class TestSports(unittest.TestCase):
+    def Test_Tennis(self):
+        tennis = Tennis('tennis')
+        self.assertEqual(tennis.printname, "tennis")
+        self.assertEqual(tennis.model, "modeloftennis.pt")
+        self.assertEqual(tennis.setmodeloptions(tennis.model),"changing model options with modelofsoccer.pt")
+        pass
 
 class TestGUI(unittest.TestCase):
     """Tests all testable parts of the GUI
