@@ -154,7 +154,11 @@ class App():
         """
         messagebox.showerror(title='Error Message', message=f"{error}")
         self.root.mainloop()
- 
+
+    def get_sport(self):
+        """
+        """
+        return path_to_model
 # App(290,200).start()
 if __name__ == '__main__':
     App(290,200).start()
