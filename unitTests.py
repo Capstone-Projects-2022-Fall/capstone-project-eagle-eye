@@ -41,7 +41,7 @@ class TestSuite(unittest.TestCase):
         self.assertEqual(tennis.model, "modeloftennis.pt")
         self.assertEqual(tennis.setmodeloptions(tennis.model),"changing model options with modeloftennis.pt")
         self.assertEqual(tennis.sendscript(tennis.model), "modeloftennis.pt")
-
+        pass
     def test_soccer(self):
         """Tests the sport soccer"""
         soccer = Soccer('soccer')
