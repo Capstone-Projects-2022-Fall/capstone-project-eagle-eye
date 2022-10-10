@@ -1,6 +1,12 @@
+import os
 from sport import Sport
 
 class Tennis(Sport):
+    """Override superclass model with the path to actual sport model"""
+    @property
+    def model(self):
+        return os.path.join(os.getcwd(), 'models', 'tennis', 'bestSoFar_le_plus_other_model.pt')
+
     def __init__(self, sportname):
         super().__init__(sportname)
 
