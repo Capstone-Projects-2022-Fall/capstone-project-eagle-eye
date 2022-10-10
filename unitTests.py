@@ -1,4 +1,5 @@
 import unittest
+import os
 import gui
 from soccer import Soccer
 from tennis import Tennis
@@ -36,11 +37,12 @@ class TestSuite(unittest.TestCase):
         pass
     def test_tennis(self):
         """Tests the sport tennis"""
+        pathToModel = os.path.join(os.getcwd(), 'models', 'tennis', 'bestSoFar_le_plus_other_model.pt')
         tennis = Tennis('tennis')
         self.assertEqual(tennis.printname(), "tennis")
-        self.assertEqual(tennis.model, "modeloftennis.pt")
-        self.assertEqual(tennis.setmodeloptions(tennis.model),"changing model options with modeloftennis.pt")
-        self.assertEqual(tennis.sendscript(tennis.model), "modeloftennis.pt")
+        self.assertEqual(tennis.model, pathToModel)
+        self.assertEqual(tennis.setmodeloptions(tennis.model), f"changing model options with {pathToModel}")
+        self.assertEqual(tennis.sendscript(tennis.model), pathToModel)
         pass
     def test_soccer(self):
         """Tests the sport soccer"""
