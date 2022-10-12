@@ -166,8 +166,8 @@ cython_debug/
 *.mp4
 # do NOT ignore the testing video 
 !test_footage/pickleball_for_testing.mp4
-!test_footage/fenceLevelFootage.mp4
 !test_footage/rublevVSshapovalov.mp4
+!test_footage/fenceLevelFootage.mp4
 
 
 
