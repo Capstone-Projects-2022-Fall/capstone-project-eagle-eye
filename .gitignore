@@ -226,6 +226,7 @@ VOC/
 !models/basketball
 !models/tennis
 !models/soccer
+!models/tennis/bestsofarjustballs300epoch.pt
 *.pb
 *.onnx
 *.engine
