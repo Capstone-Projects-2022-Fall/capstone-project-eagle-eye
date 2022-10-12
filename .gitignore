@@ -227,6 +227,8 @@ VOC/
 !models/tennis
 !models/soccer
 !models/tennis/bestsofarjustballs300epoch.pt
+!models/tennis/bestsofarwithjustballs.pt
+!models/tennis/bestSoFar_le_plus_other_model.pt
 *.pb
 *.onnx
 *.engine
