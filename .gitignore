@@ -422,3 +422,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+Tennis.v5i.yolov5pytorch
+custom_yolov5s.yaml
