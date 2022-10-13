@@ -214,17 +214,7 @@ class App():
     def resource_path(self, relative_path):
         """ Get absolute path to resource, works for dev and for PyInstaller """
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-        print(os.path.join(base_path, relative_path))
         return os.path.join(base_path, relative_path)
-    # def resource_path(self, relative_path):
-    #     """ Get absolute path to resource, works for dev and for PyInstaller """
-    #     try:
-    #         # PyInstaller creates a temp folder and stores path in _MEIPASS
-    #         base_path = sys._MEIPASS
-    #     except Exception:
-    #         base_path = os.path.abspath(".")
-
-    #     return os.path.join(base_path, relative_path)
 
 # App(290,200).start()
 if __name__ == '__main__':
