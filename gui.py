@@ -122,9 +122,7 @@ class App():
         # get the current sport selected
         weights = self.sport_selector()
         # run script with prerecorded video
-        print(weights)
         weights = self.resource_path(weights)
-        print(weights)
         try:
             detect.run(source=self.video_infile_name, view_img=True, weights=weights)
         except Exception as e:
@@ -205,9 +203,7 @@ class App():
                     pathname = filedialog.askdirectory(message = "Please select the most recent directory in the run folder")
                     list_of_files = glob.glob(pathname=pathname)
             self.path_to_runs.set(pathname)
-            print(self.path_to_runs.get())
         else: # we already have a path stored 
-            print(self.path_to_runs.get())
             list_of_files = glob.glob(pathname=self.path_to_runs.get(), root_dir="../")
         return max(list_of_files, key=os.path.getctime)
 
