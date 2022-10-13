@@ -12,7 +12,7 @@ from yolov5 import detect
 from soccer import Soccer
 from tennis import Tennis
 from basketball import BasketBall
- 
+
 class App():
     """GUI class
 
@@ -25,6 +25,7 @@ class App():
         dd_sports_options (list): List of sports options available 
         video_infile_name (StringVar): String variable for the pre recorded file name. Defaults to ""
         mode_checked (StringVar): String variable for the selected mode. Defaults to ""
+        path_to_runs (StringVar): String variable for the path to the runs folder. Defaults to ""
         sport_checked (StringVar): String variable for the selected sport. Defaults to ""
         mode_dropdown (OptionMenu): Drop down menu that contians the dd_mode_options
         sport_dropdown (OptionMenu): Drop down menu that contians the dd_sports_options
@@ -49,6 +50,7 @@ class App():
     video_infile_name = StringVar()           
     mode_checked = StringVar()
     sport_checked = StringVar()
+    path_to_runs = StringVar()
     mode_dropdown = OptionMenu(root, mode_checked, *dd_mode_options)
     sport_dropdown = OptionMenu(root, sport_checked, *dd_sports_options)
     tennis_class= Tennis("Tennis")
@@ -120,6 +122,9 @@ class App():
         # get the current sport selected
         weights = self.sport_selector()
         # run script with prerecorded video
+        print(weights)
+        weights = self.resource_path(weights)
+        print(weights)
         try:
             detect.run(source=self.video_infile_name, view_img=True, weights=weights)
         except Exception as e:
@@ -187,15 +192,39 @@ class App():
         Returns:
             path latest_file: the path to the latest file in the yolo runs folder
         """
-        pathname = os.path.join(os.getcwd(), 'yolov5', 'runs', 'detect', '*' )
-        list_of_files = glob.glob(pathname=pathname, root_dir="../")
-        if not list_of_files: #if we cant find the default run location look in the root 
-            pathname = os.path.join(os.getcwd(), 'runs', 'detect', '*' )
-            list_of_files = glob.glob(pathname=pathname, root_dir="../")
-            if not list_of_files:
-                pathname = filedialog.askdirectory(message = "Please select the most recent directory in the run folder")
-                list_of_files = glob.glob(pathname=pathname)
+        path_to_runs = self.path_to_runs.get()
+        if path_to_runs == "": # if we dont have a stored path look for one
+            pathname = os.path.join(os.getcwd(), 'yolov5', 'runs', 'detect', '*' )
+            print(pathname)
+            # list_of_files = glob.glob(pathname=pathname, root_dir=os.getcwd())
+            list_of_files = glob.glob(pathname=pathname)
+            if not list_of_files: #if we cant find the default run location look in the root 
+                pathname = os.path.join(os.getcwd(), 'runs', 'detect', '*' )
+                list_of_files = glob.glob(pathname=pathname, root_dir="../")
+                if not list_of_files:
+                    pathname = filedialog.askdirectory(message = "Please select the most recent directory in the run folder")
+                    list_of_files = glob.glob(pathname=pathname)
+            self.path_to_runs.set(pathname)
+            print(self.path_to_runs.get())
+        else: # we already have a path stored 
+            print(self.path_to_runs.get())
+            list_of_files = glob.glob(pathname=self.path_to_runs.get(), root_dir="../")
         return max(list_of_files, key=os.path.getctime)
+
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        print(os.path.join(base_path, relative_path))
+        return os.path.join(base_path, relative_path)
+    # def resource_path(self, relative_path):
+    #     """ Get absolute path to resource, works for dev and for PyInstaller """
+    #     try:
+    #         # PyInstaller creates a temp folder and stores path in _MEIPASS
+    #         base_path = sys._MEIPASS
+    #     except Exception:
+    #         base_path = os.path.abspath(".")
+
+    #     return os.path.join(base_path, relative_path)
 
 # App(290,200).start()
 if __name__ == '__main__':
