@@ -55,7 +55,7 @@ class App():
     sport_dropdown = OptionMenu(root, sport_checked, *dd_sports_options)
     tennis_class= Tennis("Tennis")
     soccer_class = Soccer("Soccer")
-    basketball_class = Soccer("Basketball")
+    basketball_class = BasketBall("Basketball")
 
     def __init__(self, width, height):
         """Sets up instance variables
