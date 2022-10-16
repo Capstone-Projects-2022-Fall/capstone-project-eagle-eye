@@ -165,7 +165,10 @@ cython_debug/
 *.prototxt
 *.mp4
 # do NOT ignore the testing video 
-!pickleball_for_testing.mp4
+!test_footage/pickleball_for_testing.mp4
+!test_footage/rublevVSshapovalov.mp4
+!test_footage/fenceLevelFootage.mp4
+
 
 
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
@@ -220,6 +223,12 @@ VOC/
 # Neural Network weights -----------------------------------------------------------------------------------------------
 *.weights
 *.pt
+!models/basketball
+!models/tennis
+!models/soccer
+!models/tennis/bestsofarjustballs300epoch.pt
+!models/tennis/bestsofarwithjustballs.pt
+!models/tennis/bestSoFar_le_plus_other_model.pt
 *.pb
 *.onnx
 *.engine
@@ -425,3 +434,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 yolov5
+custom_yolov5s.yaml
+Tennis.v5i.yolov5pytorch
+fixTorchScript.py
