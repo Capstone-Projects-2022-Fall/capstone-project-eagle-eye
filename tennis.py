@@ -9,11 +9,7 @@ class Tennis(Sport):
         """ Get absolute path to resource, works for dev and for PyInstaller """
         relative_path = os.path.join('models', 'tennis', 'bestsofarjustballs300epoch.pt')
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-        print(os.path.join(base_path, relative_path))
         return os.path.join(base_path, relative_path)
-        print(os.getcwd())
-        print(os.path.join(os.getcwd(), 'models', 'tennis', 'bestsofarjustballs300epoch.pt'))
-        return os.path.join(os.getcwd(), 'models', 'tennis', 'bestsofarjustballs300epoch.pt')
 
     def __init__(self, sportname):
         super().__init__(sportname)
