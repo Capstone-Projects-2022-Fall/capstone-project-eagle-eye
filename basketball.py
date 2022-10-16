@@ -4,7 +4,7 @@ from sport import Sport
 class BasketBall(Sport):
     # for later use, remember to change path
     # """Override superclass model with the path to actual sport model"""
-    # @property
+    @property
     def model(self):
         """ Get absolute path to resource, works for dev and for PyInstaller """
         relative_path = os.path.join('models', 'basketball', 'basketball.pt')
