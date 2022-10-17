@@ -1,12 +1,16 @@
 import os
+import sys
 from sport import Sport
 
 class Soccer(Sport):
     # for later use, remember to change path
     # """Override superclass model with the path to actual sport model"""
-    # @property
-    # def model(self):
-    #     return os.path.join(os.getcwd(), 'models', 'tennis', 'bestSoFar_le_plus_other_model.pt')
+    @property
+    def model(self):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        relative_path = os.path.join('models', 'soccer', 'soccer_model4.pt')
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
     def __init__(self, sportname):
         super().__init__(sportname)
 
