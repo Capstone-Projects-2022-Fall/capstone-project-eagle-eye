@@ -42,10 +42,10 @@ class App():
         "Default",
         "Tennis",
         "Soccer",
-        "Basketball",
-        "Baseball",
-        "Hockey",
-        "Ping Pong"
+        "Basketball"
+        # "Baseball",
+        # "Hockey",
+        # "Ping Pong"
     ]
     video_infile_name = StringVar()           
     mode_checked = StringVar()
@@ -198,13 +198,13 @@ class App():
             list_of_files = glob.glob(pathname=pathname)
             if not list_of_files: #if we cant find the default run location look in the root 
                 pathname = os.path.join(os.getcwd(), 'runs', 'detect', '*' )
-                list_of_files = glob.glob(pathname=pathname, root_dir="../")
+                list_of_files = glob.glob(pathname=pathname)
                 if not list_of_files:
                     pathname = filedialog.askdirectory(message = "Please select the most recent directory in the run folder")
                     list_of_files = glob.glob(pathname=pathname)
             self.path_to_runs.set(pathname)
         else: # we already have a path stored 
-            list_of_files = glob.glob(pathname=self.path_to_runs.get(), root_dir="../")
+            list_of_files = glob.glob(pathname=self.path_to_runs.get())
         return max(list_of_files, key=os.path.getctime)
 
     def resource_path(self, relative_path):
