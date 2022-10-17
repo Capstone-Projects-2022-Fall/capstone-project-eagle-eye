@@ -5,6 +5,17 @@ Eagle Eye is a simple, easy to use tennis line call system that is deployed whil
 To install Eagle Eye clone the main branch from git as you would with any other git repo. Next you will need to clone the YOLO repo. First run the command `git clone https://github.com/ultralytics/yolov5.git`, then you will need to install the requirements 
 to your local virtual environment so activate it and run the command `pip install -r requirements.txt`. The Eagle Eye gui should now work on your machine. 
 
+# Instructions For Use
+
+**Windows Instructions**
+Unzip the included WindowsEagleEye.zip file and navigate to the EagleEye.exe file. Double click the .exe and a terminal window will appear. Windows my alert you that the exe is dangerous and if so click `run anyway`. Choose the mode and desired sport and click execute. 
+
+**Mac Instructions**
+Unzip the included MacEagleEye.zip. Before you can run an unknown application you may need to disable Gatekeeper in MacOS. To do so open a new terminal and type `sudo spctl --master-disable`. You will then be prompted for your password, enter it and press enter. Gatekeeper is now disabled across all of MacOS (to re enable it simply run the command `spctl --enable`). Navigate to the EagleEye folder, right click on it and select `New terminal at folder`. To execute the program run the command `./EagleEye`. Choose the mode and desired sport and click execute.
+
+**Notes**
+To exit live view make sure that the window displaying the video is active (i.e. click on it) and press and hold the 'Q' key until the window closes, you can then continue to use Eagle Eye as you normally would.
+
 # Team Members
 - Athena Evans
 - Chase Donovan Glasper
