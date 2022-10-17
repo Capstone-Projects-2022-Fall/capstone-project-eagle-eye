@@ -154,7 +154,7 @@ class App():
  
     def do_cleanup(self):
         """Resets any variables that have been set"""
-        self.video_infile_name.set("")
+        self.video_infile_name == ""
     
     def error_message(self, error):
         """Display any error that is raised in a pop up window and restart the main loop
