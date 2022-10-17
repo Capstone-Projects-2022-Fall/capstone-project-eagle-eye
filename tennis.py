@@ -7,7 +7,7 @@ class Tennis(Sport):
     @property
     def model(self):
         """ Get absolute path to resource, works for dev and for PyInstaller """
-        relative_path = os.path.join('models', 'tennis', 'bestsofarjustballs300epoch.pt')
+        relative_path = os.path.join('models', 'tennis', 'tennisModel.pt')
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_path, relative_path)
 
