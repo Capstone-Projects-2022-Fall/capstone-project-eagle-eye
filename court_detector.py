@@ -1,10 +1,8 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 from sympy import Line
 from itertools import combinations
 from court_reference import CourtReference
-import scipy.signal as sp
 
 class CourtDetector:
   """
@@ -39,7 +37,6 @@ class CourtDetector:
     self.frame_points = None
     self.dist = 5
 
-
   def detect(self, frame):
     """
     Detecting the court in the frame
@@ -48,16 +45,12 @@ class CourtDetector:
     self.v_height, self.v_width = frame.shape[:2]
     # Get binary image from the frame
     self.gray = self._threshold(frame)
-
     # Filter pixel using the court known structure
     filtered = self._filter_pixels(self.gray)
-
     # Detect lines using Hough transform
     horizontal_lines, vertical_lines = self._detect_lines(filtered)
-
     # Find transformation from reference court to frame`s court
-    court_warp_matrix, game_warp_matrix, self.court_score = self._find_homography(horizontal_lines,
-                                                                                  vertical_lines)
+    court_warp_matrix, game_warp_matrix, self.court_score = self._find_homography(horizontal_lines, vertical_lines)
     self.court_warp_matrix.append(court_warp_matrix)
     self.game_warp_matrix.append(game_warp_matrix)
 
@@ -96,16 +89,10 @@ class CourtDetector:
         # Detect all lines
         lines = cv2.HoughLinesP(gray, 1, np.pi / 180, 80, minLineLength=minLineLength, maxLineGap=maxLineGap)
         lines = np.squeeze(lines)
-
-
         # Classify the lines using their slope
         horizontal, vertical = self._classify_lines(lines)
-
-
         # Merge lines that belong to the same line on frame
         horizontal, vertical = self._merge_lines(horizontal, vertical)
-
-
         return horizontal, vertical
 
   def _classify_lines(self, lines):
@@ -126,7 +113,6 @@ class CourtDetector:
                 vertical.append(line)
                 highest_vertical_y = min(highest_vertical_y, y1, y2)
                 lowest_vertical_y = max(lowest_vertical_y, y1, y2)
-
         # Filter horizontal lines using vertical lines lowest and highest point
         clean_horizontal = []
         h = lowest_vertical_y - highest_vertical_y
@@ -138,30 +124,10 @@ class CourtDetector:
                 clean_horizontal.append(line)
         return clean_horizontal, vertical
 
-  # def _classify_vertical(self, vertical, width):
-  #   """
-  #   Classify vertical lines to right and left vertical lines using the location on frame
-  #   """
-  #   vertical_lines = []
-  #   vertical_left = []
-  #   vertical_right = []
-  #   right_th = width * 4 / 7
-  #   left_th = width * 3 / 7
-  #   for line in vertical:
-  #       x1, y1, x2, y2 = line
-  #       if x1 < left_th or x2 < left_th:
-  #           vertical_left.append(line)
-  #       elif x1 > right_th or x2 > right_th:
-  #           vertical_right.append(line)
-  #       else:
-  #           vertical_lines.append(line)
-  #   return vertical_lines, vertical_left, vertical_right
-
   def _merge_lines(self, horizontal_lines, vertical_lines):
         """
         Merge lines that belongs to the same frame`s lines
         """
-
         # Merge horizontal lines
         horizontal_lines = sorted(horizontal_lines, key=lambda item: item[0])
         mask = [True] * len(horizontal_lines)
@@ -178,7 +144,6 @@ class CourtDetector:
                             line = np.array([*points[0], *points[-1]])
                             mask[i + j + 1] = False
                 new_horizontal_lines.append(line)
-
         # Merge vertical lines
         vertical_lines = sorted(vertical_lines, key=lambda item: item[1])
         xl, yl, xr, yr = (0, self.v_height * 6 / 7, self.v_width, self.v_height * 6 / 7)
@@ -198,7 +163,6 @@ class CourtDetector:
                             points = sorted([(x1, y1), (x2, y2), (x3, y3), (x4, y4)], key=lambda x: x[1])
                             line = np.array([*points[0], *points[-1]])
                             mask[i + j + 1] = False
-
                 new_vertical_lines.append(line)
         return new_horizontal_lines, new_vertical_lines
 
@@ -254,16 +218,6 @@ class CourtDetector:
         w_p = np.sum(wrong)
         return c_p - 0.5 * w_p
 
-  # def add_court_overlay(self, frame, homography=None, overlay_color=(255, 255, 255), frame_num=-1):
-  #       """
-  #       Add overlay of the court to the frame
-  #       """
-  #       if homography is None and len(self.court_warp_matrix) > 0 and frame_num < len(self.court_warp_matrix):
-  #           homography = self.court_warp_matrix[frame_num]
-  #       court = cv2.warpPerspective(self.court_reference.court, homography, frame.shape[1::-1])
-  #       frame[court > 0, :] = overlay_color
-  #       return frame
-
   def find_lines_location(self):
         """
         Finds important lines location on frame
@@ -272,14 +226,6 @@ class CourtDetector:
         self.lines = cv2.perspectiveTransform(self.p, self.court_warp_matrix[-1]).reshape(-1)
         return self.lines
 
-  # def get_warped_court(self):
-  #       """
-  #       Returns warped court using the reference court and the transformation of the court
-  #       """
-  #       court = cv2.warpPerspective(self.court_reference.court, self.court_warp_matrix[-1], self.frame.shape[1::-1])
-  #       court[court > 0] = 1
-  #       return court
-
   def track_court(self, frame):
         """
         Track court location after detection
@@ -287,10 +233,8 @@ class CourtDetector:
         copy = frame.copy()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if self.frame_points is None:
-            conf_points = np.array(self.court_reference.court_conf[self.best_conf], dtype=np.float32).reshape(
-                (-1, 1, 2))
-            self.frame_points = cv2.perspectiveTransform(conf_points,
-                                                         self.court_warp_matrix[-1]).squeeze().round()
+            conf_points = np.array(self.court_reference.court_conf[self.best_conf], dtype=np.float32).reshape((-1, 1, 2))
+            self.frame_points = cv2.perspectiveTransform(conf_points, self.court_warp_matrix[-1]).squeeze().round()
         # Lines of configuration on frames
         line1 = self.frame_points[:2]
         line2 = self.frame_points[2:4]
@@ -298,7 +242,6 @@ class CourtDetector:
         line4 = self.frame_points[[1, 3]]
         lines = [line1, line2, line3, line4]
         new_lines = []
-        # print(lines)
         for line in lines:
             # Get 100 samples of each line in the frame
             points_on_line = np.linspace(line[0], line[1], 102)[1:-1]  # 100 samples on the line
@@ -317,9 +260,7 @@ class CourtDetector:
             # if one of the ends of the line is out of the frame get only the points inside the frame
             if p1 is not None or p2 is not None:
                 print('points outside screen')
-                points_on_line = np.linspace(p1 if p1 is not None else line[0], p2 if p2 is not None else line[1], 102)[
-                                 1:-1]
-
+                points_on_line = np.linspace(p1 if p1 is not None else line[0], p2 if p2 is not None else line[1], 102)[1:-1]
             new_points = []
             # Find max intensity pixel near each point
             for p in points_on_line:
@@ -336,8 +277,7 @@ class CourtDetector:
             new_points = np.array(new_points, dtype=np.float32).reshape((-1, 1, 2))
             # find line fitting the new points
             [vx, vy, x, y] = cv2.fitLine(new_points, cv2.DIST_L2, 0, 0.01, 0.01)
-            new_lines.append(((int(x - vx * self.v_width), int(y - vy * self.v_width)),
-                              (int(x + vx * self.v_width), int(y + vy * self.v_width))))
+            new_lines.append(((int(x - vx * self.v_width), int(y - vy * self.v_width)), (int(x + vx * self.v_width), int(y + vy * self.v_width))))
             # if less than 50 points were found detect court from the start instead of tracking
             if len(new_points) < 50:
                 if self.dist > 20:
@@ -367,7 +307,6 @@ def line_intersection(line1, line2):
     """
     l1 = Line(line1[0], line1[1])
     l2 = Line(line2[0], line2[1])
-
     intersection = l1.intersection(l2)
     return intersection[0].coordinates
 

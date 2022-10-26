@@ -32,6 +32,7 @@ class App():
         tennis_class (Sport): Instance of tennis class
         soccer_class (Sport): Instance of soccer class
         basketball_class (Sport): Instance of basketball class
+        sport_flag (Int): flag thats passed to detect to ket it know what extra processing needs to be done
     """
     root = tkinter.Tk()
     dd_mode_options = [
@@ -56,6 +57,7 @@ class App():
     tennis_class= Tennis("Tennis")
     soccer_class = Soccer("Soccer")
     basketball_class = BasketBall("Basketball")
+    sport_flag = 0
 
     def __init__(self, width, height):
         """Sets up instance variables
@@ -124,7 +126,7 @@ class App():
         # run script with prerecorded video
         weights = self.resource_path(weights)
         try:
-            detect.run(source=self.video_infile_name, view_img=True, weights=weights)
+            detect.run(sport_flag=self.sport_flag, source=self.video_infile_name, view_img=True, weights=weights)
         except Exception as e:
             self.error_message(e)
         latest_file = self.get_latest_file()
@@ -172,10 +174,13 @@ class App():
         """
         mode = self.sport_checked.get()
         if mode == "Tennis":
+            self.sport_flag = 1
             return self.tennis_class.model
         elif mode == "Soccer":
+            self.sport_flag = 2
             return self.soccer_class.model
         elif mode == "Basketball":
+            self.sport_flag = 3
             return self.basketball_class.model
         elif mode == "Default":
             return 'yolov5s.pt'
