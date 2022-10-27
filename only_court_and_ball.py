@@ -5,7 +5,7 @@ import cv2
 from court_detector import CourtDetector
 import torch
 import numpy as np
-# from courtUtils import get_video_properties, get_dtype
+# from c ourtUtils import get_video_properties, get_dtype
 
 def get_dtype():
     dev = 'cuda' if torch.cuda.is_available() else 'cpu'
