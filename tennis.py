@@ -15,6 +15,9 @@ class Tennis(Sport):
         relative_path = os.path.join('models', 'tennis', 'tennisModel.pt')
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(base_path, relative_path)
+    
+    # public var for lines reference to use with ball detection
+    court_reference = None
 
     def __init__(self, sportname):
         super().__init__(sportname)
@@ -71,6 +74,8 @@ class Tennis(Sport):
         for i in range(0, len(lines), 4):
             x1, y1, x2, y2 = lines[i],lines[i+1], lines[i+2], lines[i+3]
             cv2.line(frame, (int(x1),int(y1)),(int(x2),int(y2)), (0,0,255), 5)
+        #set the court refereence variable with the object with filled lines 
+        court_reference = court_detector
         return frame
 
 # tennis = Tennis('tennis')
