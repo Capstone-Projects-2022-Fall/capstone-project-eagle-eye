@@ -12,6 +12,7 @@ from yolov5 import detect
 from soccer import Soccer
 from tennis import Tennis
 from basketball import BasketBall
+from baseball import Baseball
 
 class App():
     """GUI class
@@ -43,8 +44,8 @@ class App():
         "Default",
         "Tennis",
         "Soccer",
-        "Basketball"
-        # "Baseball",
+        "Basketball",
+        "Baseball"
         # "Hockey",
         # "Ping Pong"
     ]
@@ -58,6 +59,7 @@ class App():
     soccer_class = Soccer("Soccer")
     basketball_class = BasketBall("Basketball")
     sport_flag = 0
+    baseball_class = Baseball("Baseball")
 
     def __init__(self, width, height):
         """Sets up instance variables
@@ -182,6 +184,8 @@ class App():
         elif mode == "Basketball":
             self.sport_flag = 3
             return self.basketball_class.model
+        elif mode == "Baseball":
+            return self.baseball_class.model
         elif mode == "Default":
             return 'yolov5s.pt'
 
