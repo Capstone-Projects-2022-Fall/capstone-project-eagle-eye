@@ -47,8 +47,13 @@ class CourtReference:
         self.right_left_border = 274
         self.court_total_width = self.court_width + self.right_left_border * 2
         self.court_total_height = self.court_height + self.top_bottom_border * 2
-        
-        self.court = cv2.cvtColor(cv2.imread(os.path.join(os.getcwd(),'court_configurations', 'court_reference.png')), cv2.COLOR_BGR2GRAY)
+        # need this check for windows?
+        if os.getcwd().endswith('yolov5'):
+            os.chdir("..")
+            self.court = cv2.cvtColor(cv2.imread(os.path.join('court_configurations', 'court_reference.png')), cv2.COLOR_BGR2GRAY)
+            os.chdir("yolov5")
+        else:
+            self.court = cv2.cvtColor(cv2.imread(os.path.join('court_configurations', 'court_reference.png')), cv2.COLOR_BGR2GRAY)
 
     def build_court_reference(self):
         """
@@ -66,7 +71,13 @@ class CourtReference:
         cv2.line(court, *self.right_inner_line, 1, self.line_width)
         cv2.line(court, *self.middle_line, 1, self.line_width)
         court = cv2.dilate(court, np.ones((5, 5), dtype=np.uint8))
-        plt.imsave(os.path.join(os.getcwd(),'court_configurations', 'court_reference.png'), court, cmap='gray')
+        # need this check for windows?
+        if os.getcwd().endswith('yolov5'):
+            os.chdir("..")
+            plt.imsave(os.path.join('court_configurations', 'court_reference.png'), court, cmap='gray')
+            os.chdir("yolov5")
+        else:
+            plt.imsave(os.path.join('court_configurations', 'court_reference.png'), court, cmap='gray')
         self.court = court
         return court
 
