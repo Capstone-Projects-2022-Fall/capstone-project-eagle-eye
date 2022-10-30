@@ -41,8 +41,3 @@ class Sport(ABC):
             model: the model that will be used
             """
         pass
-
-    # @abstractmethod
-    # def detect_court(model):
-    #     """detects tennis court """
-    #     pass

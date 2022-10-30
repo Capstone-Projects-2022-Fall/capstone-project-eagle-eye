@@ -224,6 +224,16 @@ class CourtDetector:
         """
         self.p = np.array(self.court_reference.get_important_lines(), dtype=np.float32).reshape((-1, 1, 2))
         self.lines = cv2.perspectiveTransform(self.p, self.court_warp_matrix[-1]).reshape(-1)
+        self.baseline_top = self.lines[:4]
+        self.baseline_bottom = self.lines[4:8]
+        self.net = self.lines[8:12]
+        self.left_court_line = self.lines[12:16]
+        self.right_court_line = self.lines[16:20]
+        self.left_inner_line = self.lines[20:24]
+        self.right_inner_line = self.lines[24:28]
+        self.middle_line = self.lines[28:32]
+        self.top_inner_line = self.lines[32:36]
+        self.bottom_inner_line = self.lines[36:40]
         return self.lines
 
   def track_court(self, frame):
