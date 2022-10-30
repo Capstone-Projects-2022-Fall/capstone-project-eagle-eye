@@ -113,7 +113,7 @@ class Tennis(Sport):
                 if change_vel > self.bounce_thresh:
                     self.bounce_count += 1
                     if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
-                        cv2.putText(img=frame_in, text="OUT!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(0, 0))
+                        cv2.putText(img=frame_in, text="OUT!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(500, 500))
                         print("OUT!!!")
             # update previous state trackers
             self.prev_est_vel = self.est_vel[:]
