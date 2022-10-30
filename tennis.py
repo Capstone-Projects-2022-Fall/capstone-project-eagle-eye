@@ -17,6 +17,7 @@ class Tennis(Sport):
         return os.path.join(base_path, relative_path)
     
     # public var for lines reference to use with ball detection
+    court_lines = None
     court_reference = None
     prev_pos = [0, 0]
     est_vel = [0,0]
@@ -75,13 +76,19 @@ class Tennis(Sport):
         court_detector = CourtDetector()
         frame=frame_in
         lines = court_detector.detect(frame)
-        self.court_reference = court_detector
         for i in range(0, len(lines), 4):
             x1, y1, x2, y2 = lines[i],lines[i+1], lines[i+2], lines[i+3]
             cv2.line(frame, (int(x1),int(y1)),(int(x2),int(y2)), (0,0,255), 5)
         #set the court refereence variable with the object with filled lines 
-        # self.court_reference = court_detector
+        self.court_reference = court_detector
         return frame
+    
+    def trackCourt(self, frame_in):
+        lines = self.court_reference.track_court(frame_in)
+        for i in range(0, len(lines), 4):
+            x1, y1, x2, y2 = lines[i],lines[i+1], lines[i+2], lines[i+3]
+            cv2.line(frame_in, (int(x1),int(y1)),(int(x2),int(y2)), (0,0,255), 5) 
+        return frame_in
 
     def lineCall(self, xy_In, frame_in):
         if self.court_reference is not None:
@@ -106,7 +113,7 @@ class Tennis(Sport):
                 if change_vel > self.bounce_thresh:
                     self.bounce_count += 1
                     if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
-                        cv2.putText(img=frame_in, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=5, color=(0,255,255), org=(100, 100))
+                        cv2.putText(img=frame_in, text="OUT!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(0, 0))
                         print("OUT!!!")
             # update previous state trackers
             self.prev_est_vel = self.est_vel[:]
