@@ -128,7 +128,8 @@ class App():
         # run script with prerecorded video
         weights = self.resource_path(weights)
         try:
-            detect.run(sport_flag=self.sport_flag, source=self.video_infile_name, view_img=True, weights=weights)
+            #detect.run(sport_flag=self.sport_flag, source=self.video_infile_name, view_img=True, weights=weights)
+            detect.run(source=self.video_infile_name, view_img=True, weights=weights)
         except Exception as e:
             self.error_message(e)
         latest_file = self.get_latest_file()
@@ -185,6 +186,7 @@ class App():
             self.sport_flag = 3
             return self.basketball_class.model
         elif mode == "Baseball":
+            """self.sport_flag = 4 """
             return self.baseball_class.model
         elif mode == "Default":
             return 'yolov5s.pt'
