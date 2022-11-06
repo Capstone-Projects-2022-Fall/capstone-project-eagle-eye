@@ -177,36 +177,39 @@ class CourtDetector:
         max_inv_mat = None
         k = 0
         # Loop over every pair of horizontal lines and every pair of vertical lines
-        for horizontal_pair in list(combinations(horizontal_lines, 2)):
-            for vertical_pair in list(combinations(vertical_lines, 2)):
-                h1, h2 = horizontal_pair
-                v1, v2 = vertical_pair
-                # Finding intersection points of all lines
-                i1 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
-                i2 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
-                i3 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
-                i4 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
+        if len(horizontal_lines) >1 and len(vertical_lines) >1: #check that we even detected enough lines to begin with
+            for horizontal_pair in list(combinations(horizontal_lines, 2)):
+                for vertical_pair in list(combinations(vertical_lines, 2)):
+                    h1, h2 = horizontal_pair
+                    v1, v2 = vertical_pair
+                    # Finding intersection points of all lines
+                    i1 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
+                    i2 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
+                    i3 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
+                    i4 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
 
-                intersections = [i1, i2, i3, i4]
-                intersections = sort_intersection_points(intersections)
+                    intersections = [i1, i2, i3, i4]
+                    intersections = sort_intersection_points(intersections)
 
-                for i, configuration in self.court_reference.court_conf.items():
-                    # if k is > 10000 (arbitrary for now) we cant find a configuration
-                    if(k > 10000):
-                        return None, None, None
-                    # Find transformation
-                    matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)
-                    inv_matrix = cv2.invert(matrix)[1]
-                    # Get transformation score
-                    confi_score = self._get_confi_score(matrix)
+                    for i, configuration in self.court_reference.court_conf.items():
+                        # if k is > 10000 (arbitrary for now) we cant find a configuration
+                        if(k > 10000):
+                            return None, None, None
+                        # Find transformation
+                        matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)
+                        inv_matrix = cv2.invert(matrix)[1]
+                        # Get transformation score
+                        confi_score = self._get_confi_score(matrix)
 
-                    if max_score < confi_score:
-                        max_score = confi_score
-                        max_mat = matrix
-                        max_inv_mat = inv_matrix
-                        self.best_conf = i
+                        if max_score < confi_score:
+                            max_score = confi_score
+                            max_mat = matrix
+                            max_inv_mat = inv_matrix
+                            self.best_conf = i
 
-                    k += 1
+                        k += 1
+        else: #if we didnt then just return none
+            return None, None, None
         return max_mat, max_inv_mat, max_score
 
   def _get_confi_score(self, matrix):
