@@ -191,9 +191,8 @@ class CourtDetector:
                 intersections = sort_intersection_points(intersections)
 
                 for i, configuration in self.court_reference.court_conf.items():
-                    # if k is > 700 (arbitrary for now) we cant find a configuration
-                    # if(k > 2000):
-                    if(k > 2):
+                    # if k is > 2000 (arbitrary for now) we cant find a configuration
+                    if(k > 2000):
                         return None, None, None
                     # Find transformation
                     matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)

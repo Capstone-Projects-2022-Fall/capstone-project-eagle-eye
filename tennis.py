@@ -90,7 +90,7 @@ class Tennis(Sport):
             return frame
         else:
             # trigger a function to have the user pick the court 
-            print("NO COURT DETECTED!!!")
+            print("NO COURT DETECTED!")
             return self.userDefinedCoordinates(frame=frame)
     
     def trackCourt(self, frame):
@@ -102,7 +102,7 @@ class Tennis(Sport):
             return frame
         else:
             # trigger a function to have the user pick the court 
-            print("NO COURT DETECTED!!!")
+            print("NO COURT DETECTED!")
             return self.userDefinedCoordinates(frame=frame)
 
     def lineCall(self, xy_In, frame):
@@ -146,48 +146,9 @@ class Tennis(Sport):
         return frame
 
     def userDefinedCoordinates(self, frame):
-        # ogFrame = frame
-        # if self.court_reference is not None:
-        #     # use the coordinates from the automatic generation....not really needed?
-        #     bBaseline = self.court_reference.baseline_bottom
-        #     tBaseline= self.court_reference.baseline_top
-        #     Linner = self.court_reference.left_inner_line
-        #     Rinner = self.court_reference.right_inner_line
-        #     print(bBaseline)
-        #     print(tBaseline)
-        #     print(Linner)
-        #     print(f"{int(Linner[0])}, {int(Linner[1])}")
-        #     print(f"{Linner[2]}, {Linner[3]}")
-        #     print(f"{Rinner[2]}, {Rinner[3]}")
-        #     print(f"{Rinner[0]}, {Rinner[1]}")
-        #     print(Rinner)
-        #     pts_src = np.array([
-        #         [int(Linner[0]),int(Linner[1])],     # top left corner
-        #         [int(Linner[2]),int(Linner[3])],     # bottom left
-        #         [int(Rinner[2]),int(Rinner[3])],    # bottom right
-        #         [int(Rinner[0]),int(Rinner[1])],     # top right rorner
-        #         ])
-        # elif self.custom_coordinates is not None:
-        #     pts_src = self.custom_coordinates
         if self.custom_coordinates is not None:
             pts_src = self.custom_coordinates
         else: 
-            # hard coded 
-            # 3secQatarTest.mp4 coordinates
-            # pts_src = np.array([
-            #     [642,212],     # top left corner
-            #     [392,712],     # bottom left
-            #     [1321,708],    # bottom right
-            #     [1069,210],     # top right rorner
-            #     ])   
-
-            # swingvisionmed1
-            # pts_src = np.array([
-            #     [816,291],     # top left corner
-            #     [124,867],     # bottom left
-            #     [1946,877],    # bottom right
-            #     [1235,293],     # top right rorner
-            #     ])   
             pts_src = self.selectCoordinates(frame=frame)
             self.custom_coordinates = pts_src
             self.custom_lines = np.array([
@@ -196,40 +157,8 @@ class Tennis(Sport):
                 np.concatenate([pts_src[0], pts_src[1]]),    # left line
                 np.concatenate([pts_src[3], pts_src[2]]),     # right line
                 ]) 
-            print(self.custom_lines)
-            # swingvisionmed2
-            # pts_src = np.array([
-            #     [918,305],     # top left corner
-            #     [440,678],     # bottom left
-            #     [1668,718],    # bottom right
-            #     [1219,308],     # top right rorner
-            #     ]) 
   
         frame = cv2.polylines(frame, [pts_src], isClosed=True, color=[255,0,0], thickness=2)
-        # cv2.imshow("frame", frame)
-        # cv2.waitKey(0)
-
-        # vvvvvvvvvvvvvvvvvvvvvv do i even need this?? vvvvvvvvvvvvvvvvv
-        # # Read destination image.
-        # img_dst = cv2.imread('/Users/tyler/Documents/GitHub/capstone-project-eagle-eye/court_configurations/court_reference.png')
-
-        # # reference image points
-        # pts_dst = np.array([
-        #     [421, 559],     # top left corner
-        #     [421, 2937],     # bottom left
-        #     [1244, 2937],    # bottom right
-        #     [1244, 559],     # top right corner
-        #     ])   
-
-        # # Calculate Homography
-        # h, status = cv2.findHomography(pts_src, pts_dst)
-
-        # # Warp source image to destination based on homography
-        # img_src2 = ogFrame
-        # img_out = cv2.warpPerspective(frame, h, (img_dst.shape[1], img_dst.shape[0]))
-        # cv2.imshow("Warped", img_out)
-        # cv2.waitKey(0)
-        # # cv2.imshow("lines", frame)
         return frame
 
     def selectCoordinates(self, frame):
@@ -247,18 +176,11 @@ class Tennis(Sport):
             ]) 
         i=0
         param = [pts_src, frameCopy, i]
-        # pymsgbox.alert(text="test text", title="test title")
-        # msgbox("Eagle Eye was unable to automatically detect your cour parameters.\nPlease select the four corners of either the singles court or doubles court starting at the top left corner and going counter clockwise.\nTo select a coordinate press the left mouse button. If you need to clear all the coordinates press the right mouse button.\nThe system will only allow you to select 4 coordinates so for best results all 4 corners of the court need to be within the frame.", title="Select Coordinates")
-        # messagebox.showinfo(
-        #     title="Select Coordinates", 
-        #     message="""Eagle Eye was unable to automatically detect your cour parameters.\n
-        #     Please select the four corners of either the singles court or doubles court starting at the top left corner and going counter clockwise.\non
-        #     To select a coordinate press the left mouse button. If you need to clear all the coordinates press the right mouse button.\n
-        #     The system will only allow you to select 4 coordinates so for best results all 4 corners of the court need to be within the frame.""")
+
+        print("Eagle Eye was unable to automatically detect your cour parameters.\nPlease select the four corners of either the singles court or doubles court starting at the top left corner and going counter clockwise.\nTo select a coordinate press the left mouse button. If you need to clear all the coordinates press the right mouse button.\nThe system will only allow you to select 4 coordinates so for best results all 4 corners of the court need to be within the frame.\n To exit press 0")
         cv2.setMouseCallback('select coordinates', self.click_event, param=param)
         # wait for a key to be pressed to exit
         cv2.waitKey(0)
-
         # close the window
         cv2.destroyAllWindows()
         return pts_src
