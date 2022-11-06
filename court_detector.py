@@ -52,7 +52,7 @@ class CourtDetector:
     # Find transformation from reference court to frame`s court
     court_warp_matrix, game_warp_matrix, self.court_score = self._find_homography(horizontal_lines, vertical_lines)
     if self.court_score is None: # if this is true then we went over the threshold for court detection and couldnt detect the court
-        return None 
+        return [] #return empty array as the lines, this gets around an error fron trying to compare none 
     self.court_warp_matrix.append(court_warp_matrix)
     self.game_warp_matrix.append(game_warp_matrix)
 
@@ -191,8 +191,8 @@ class CourtDetector:
                 intersections = sort_intersection_points(intersections)
 
                 for i, configuration in self.court_reference.court_conf.items():
-                    # if k is > 2000 (arbitrary for now) we cant find a configuration
-                    if(k > 5000):
+                    # if k is > 10000 (arbitrary for now) we cant find a configuration
+                    if(k > 10000):
                         return None, None, None
                     # Find transformation
                     matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)

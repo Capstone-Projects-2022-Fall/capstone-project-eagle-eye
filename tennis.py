@@ -81,7 +81,7 @@ class Tennis(Sport):
         frame=frame
         lines = court_detector.detect(frame)
         # If no court is found lines will be none 
-        if lines != None:
+        if lines != []:
             for i in range(0, len(lines), 4):
                 x1, y1, x2, y2 = lines[i],lines[i+1], lines[i+2], lines[i+3]
                 cv2.line(frame, (int(x1),int(y1)),(int(x2),int(y2)), (0,0,255), 5)
