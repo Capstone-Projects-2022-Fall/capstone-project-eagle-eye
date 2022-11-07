@@ -8,6 +8,8 @@ import torch
 import math
 import numpy as np
 import copy
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 class Tennis(Sport):
     """Override superclass model with the path to actual sport model"""
@@ -125,6 +127,30 @@ class Tennis(Sport):
         ball_x = xy_In[0]*1000
         ball_y = xy_In[1]*1000
         ball_pos = [ball_x, ball_y]
+
+        # pts_src = np.array([
+        #     [court_lines.left_inner_line[0], court_lines.left_inner_line[1]],     # top left corner
+        #     [court_lines.left_inner_line[2], court_lines.left_inner_line[3]],     # bottom left
+        #     [court_lines.right_inner_line[2], court_lines.right_inner_line[3]],    # bottom right
+        #     [court_lines.right_inner_line[0], court_lines.right_inner_line[1]],     # top right rorner
+        #     ]) 
+
+        # frame = cv2.polylines(frame, np.int32([pts_src]), isClosed=True, color=[0, 0, 0], thickness=2)
+
+
+        # point = Point(ball_x, ball_y) 
+        # polygon = Polygon([(court_lines.left_inner_line[0], court_lines.left_inner_line[1]), (court_lines.left_inner_line[2], court_lines.left_inner_line[3]), (court_lines.right_inner_line[2], court_lines.right_inner_line[3]), (court_lines.right_inner_line[0], court_lines.right_inner_line[1])])
+        
+        # print(polygon.contains(point))
+        # # int_coords = lambda x: np.array(x).round().astype(np.int32)
+        # # exterior = [int_coords(polygon.exterior.coords)]
+
+        # # image = frame
+        # # overlay = image.copy()
+        # # cv2.fillPoly(overlay, exterior, color=(3, 252, 19))
+        # # # cv2.addWeighted(overlay, alpha, image, 1 - alpha, 0, image)
+        # cv2.imshow("Polygon", frame)
+
 
         self.est_vel[0] = (ball_pos[0] - self.prev_pos[0])
         self.est_vel[1] = (ball_pos[1] - self.prev_pos[1])

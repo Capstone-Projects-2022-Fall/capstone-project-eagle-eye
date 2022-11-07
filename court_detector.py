@@ -49,6 +49,8 @@ class CourtDetector:
     filtered = self._filter_pixels(self.gray)
     # Detect lines using Hough transform
     horizontal_lines, vertical_lines = self._detect_lines(filtered)
+    if (horizontal_lines and vertical_lines) is None:
+        return []
     # Find transformation from reference court to frame`s court
     court_warp_matrix, game_warp_matrix, self.court_score = self._find_homography(horizontal_lines, vertical_lines)
     if self.court_score is None: # if this is true then we went over the threshold for court detection and couldnt detect the court
@@ -91,11 +93,16 @@ class CourtDetector:
         # Detect all lines
         lines = cv2.HoughLinesP(gray, 1, np.pi / 180, 80, minLineLength=minLineLength, maxLineGap=maxLineGap)
         lines = np.squeeze(lines)
-        # Classify the lines using their slope
-        horizontal, vertical = self._classify_lines(lines)
-        # Merge lines that belong to the same line on frame
-        horizontal, vertical = self._merge_lines(horizontal, vertical)
-        return horizontal, vertical
+        if lines:
+            # cv2.imshow("lines", lines)
+            # cv2.waitKey(0)
+            # Classify the lines using their slope
+
+            horizontal, vertical = self._classify_lines(lines)
+            # Merge lines that belong to the same line on frame
+            horizontal, vertical = self._merge_lines(horizontal, vertical)
+            return horizontal, vertical
+        return None, None
 
   def _classify_lines(self, lines):
         """
@@ -193,6 +200,8 @@ class CourtDetector:
 
                     for i, configuration in self.court_reference.court_conf.items():
                         # if k is > 10000 (arbitrary for now) we cant find a configuration
+                        if k%1000 == 0:
+                            print("Attempting to automatically detect court.")
                         if(k > 10000):
                             return None, None, None
                         # Find transformation
