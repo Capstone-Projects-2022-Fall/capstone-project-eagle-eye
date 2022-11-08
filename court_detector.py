@@ -90,10 +90,11 @@ class CourtDetector:
         """
         minLineLength = 100
         maxLineGap = 20
+        lines = [None]
         # Detect all lines
         lines = cv2.HoughLinesP(gray, 1, np.pi / 180, 80, minLineLength=minLineLength, maxLineGap=maxLineGap)
         lines = np.squeeze(lines)
-        if lines:
+        if lines.any() is not None:
             # cv2.imshow("lines", lines)
             # cv2.waitKey(0)
             # Classify the lines using their slope
