@@ -13,6 +13,16 @@ from shapely.geometry.polygon import Polygon
 from scipy.ndimage import gaussian_filter
 from predictionKalmanfilter import KalmanFilter
 
+REDU = 8
+def rgbh(xs, mask):
+    def normhist(x): return x / np.sum(x)
+    def h(rgb):
+        return cv2.calcHist([rgb], [0, 1, 2],mask, [256//REDU, 256//REDU, 256//REDU] , [0, 256] + [0, 256] + [0, 256])
+    return normhist(sum(map(h, xs)))
+
+def smooth(s,x):
+    return gaussian_filter(x,s,mode='constant')
+
 class Tennis(Sport):
     """Override superclass model with the path to actual sport model"""
     @property
@@ -32,6 +42,82 @@ class Tennis(Sport):
     bounce_thresh = 10
     custom_coordinates = None
     custom_lines = None
+    # REDU = 8
+
+
+    # bgsub = cv2.createBackgroundSubtractorMOG2(500, 16, True) #The threshold value could vary(60)
+    bgsub = cv2.createBackgroundSubtractorMOG2(500, 60, True) #The threshold value could vary(60)
+
+    key = 0
+
+    kernel = np.ones((3,3),np.uint8)
+    crop = True
+    camshift = True
+    # crop = False
+    # camshift = False
+    termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    pause= False
+
+    pause= False
+    ###################### Kalman inicial ######################## 
+    
+    degree = np.pi/180
+
+
+    fps = 120
+    dt = 1/fps
+    # t = np.arange(0,2.01,dt)
+    noise = 3
+
+    A = np.array(
+        [1, 0, dt, 0,
+        0, 1, 0, dt,
+        0, 0, 1, 0,
+        0, 0, 0, 1 ]).reshape(4,4)
+
+    # 중력 조절 
+    u = np.array([0, 5])
+    B = np.array(
+        [dt**2/2, 0,
+        0, dt**2/2,
+        dt, 0,
+        0, dt ]).reshape(4,2)
+
+    H = np.array(
+        [1,0,0,0,
+        0,1,0,0]).reshape(2,4)
+
+    # x, y, vx, vy
+    mu = np.array([0,0,0,0])
+    # P = np.diag([1000,1000,1000,1000])**2
+    P = np.diag([10,10,10,10])**2
+    res=[]
+    N = 15
+    sigmaM = 0.0001
+    sigmaZ = 3*noise
+
+    Q = sigmaM**2 * np.eye(4)
+    R = sigmaZ**2 * np.eye(2)
+    listCenterX=[]
+    listCenterY=[]
+    kf = KalmanFilter()
+    add_count = 0
+    mm=False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def __init__(self, sportname):
         super().__init__(sportname)
@@ -242,73 +328,89 @@ class Tennis(Sport):
                 [0,0],  
                 [0,0], 
                 ])
-        
-    def predictBallPath(self, frame, xy_In):
-        REDU = 8
-        def rgbh(xs,mask):
-            def normhist(x): return x / np.sum(x)
-            def h(rgb):
-                return cv2.calcHist([rgb], [0, 1, 2],mask, [256//REDU, 256//REDU, 256//REDU] , [0, 256] + [0, 256] + [0, 256])
-            return normhist(sum(map(h, xs)))
 
-        def smooth(s,x):
-            return gaussian_filter(x,s,mode='constant')
+
+
+
+    # def rgbh(xs, mask):
+    #     def normhist(x): return x / np.sum(x)
+    #     def h(rgb):
+    #         return cv2.calcHist([rgb], [0, 1, 2],mask, [256//REDU, 256//REDU, 256//REDU] , [0, 256] + [0, 256] + [0, 256])
+    #     return normhist(sum(map(h, xs)))
+
+    # def smooth(s,x):
+    #     return gaussian_filter(x,s,mode='constant')
+
+    def predictBallPath(self, frame, xy_In):
+        # REDU = 8
+        # frame = copy.copy(frame)
+        # def rgbh(xs,mask):
+        #     def normhist(x): return x / np.sum(x)
+        #     def h(rgb): return cv2.calcHist([rgb], [0, 1, 2], mask, [256//REDU, 256//REDU, 256//REDU], [0, 256] + [0, 256] + [0, 256])
+        #     return normhist(sum(map(h, xs)))
+
+        # def smooth(s,x):
+        #     return gaussian_filter(x,s,mode='constant')
 
         x1 = int(xy_In[0]*1000)
         y1 = int(xy_In[1]*1000)
         x2 = int(xy_In[2]*1000)
         y2 = int(xy_In[3]*1000)
+        # x1 = int(xy_In[0])
+        # y1 = int(xy_In[1])
+        # x2 = int(xy_In[2])
+        # y2 = int(xy_In[3])
         # bgsub = cv2.createBackgroundSubtractorMOG2(500, 16, True) #The threshold value could vary(60)
-        bgsub = cv2.createBackgroundSubtractorMOG2(500, 60, True) #The threshold value could vary(60)
-        key = 0
-        kernel = np.ones((3,3),np.uint8)
-        crop = True
-        camshift = True
-        # crop = False
-        # camshift = False
-        termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        pause= False
-        ###################### Kalman inicial ######################## 
-        degree = np.pi/180
-        fps = 120
-        dt = 1/fps
-        # t = np.arange(0,2.01,dt)
-        noise = 3
+        # bgsub = cv2.createBackgroundSubtractorMOG2(500, 60, True) #The threshold value could vary(60)
+        # key = 0
+        # kernel = np.ones((3,3),np.uint8)
+        # crop = True
+        # camshift = True
+        # # crop = False
+        # # camshift = False
+        # termination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+        # font = cv2.FONT_HERSHEY_SIMPLEX
+        # pause= False
+        # ###################### Kalman inicial ######################## 
+        # degree = np.pi/180
+        # fps = 120
+        # dt = 1/fps
+        # # t = np.arange(0,2.01,dt)
+        # noise = 3
 
-        A = np.array(
-            [1, 0, dt, 0,
-            0, 1, 0, dt,
-            0, 0, 1, 0,
-            0, 0, 0, 1 ]).reshape(4,4)
+        # A = np.array(
+        #     [1, 0, dt, 0,
+        #     0, 1, 0, dt,
+        #     0, 0, 1, 0,
+        #     0, 0, 0, 1 ]).reshape(4,4)
 
-        u = np.array([0, 5])
-        B = np.array(
-            [dt**2/2, 0,
-            0, dt**2/2,
-            dt, 0,
-            0, dt ]).reshape(4,2)
+        # u = np.array([0, 5])
+        # B = np.array(
+        #     [dt**2/2, 0,
+        #     0, dt**2/2,
+        #     dt, 0,
+        #     0, dt ]).reshape(4,2)
 
-        H = np.array(
-            [1,0,0,0,
-            0,1,0,0]).reshape(2,4)
+        # H = np.array(
+        #     [1,0,0,0,
+        #     0,1,0,0]).reshape(2,4)
 
-        # x, y, vx, vy
-        mu = np.array([0,0,0,0])
-        # P = np.diag([1000,1000,1000,1000])**2
-        P = np.diag([10,10,10,10])**2
-        res=[]
-        N = 15
-        sigmaM = 0.0001
-        sigmaZ = 3*noise
+        # # x, y, vx, vy
+        # mu = np.array([0,0,0,0])
+        # # P = np.diag([1000,1000,1000,1000])**2
+        # P = np.diag([10,10,10,10])**2
+        # res=[]
+        # N = 15
+        # sigmaM = 0.0001
+        # sigmaZ = 3*noise
 
-        Q = sigmaM**2 * np.eye(4)
-        R = sigmaZ**2 * np.eye(2)
-        listCenterX=[]
-        listCenterY=[]
-        kf = KalmanFilter()
-        add_count = 0
-        mm=False
+        # Q = sigmaM**2 * np.eye(4)
+        # R = sigmaZ**2 * np.eye(2)
+        # listCenterX=[]
+        # listCenterY=[]
+        # kf = KalmanFilter()
+        # add_count = 0
+        # mm=False
 
         # width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
         # height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
@@ -328,25 +430,28 @@ class Tennis(Sport):
             # if ret == False:
             #     break
             
-        # frame=cv2.resize(frame,(1366,768))
-        bgs = bgsub.apply(frame)
-        bgs = cv2.erode(bgs,kernel,iterations = 1)
+        frame=cv2.resize(frame,(1366,768))
+        bgs = self.bgsub.apply(frame)
+        bgs = cv2.erode(bgs,self.kernel,iterations = 1)
         bgs = cv2.medianBlur(bgs,3)
-        bgs = cv2.dilate(bgs,kernel,iterations=2)
+        bgs = cv2.dilate(bgs,self.kernel,iterations=2)
         bgs = (bgs > 200).astype(np.uint8)*255
         colorMask = cv2.bitwise_and(frame,frame,mask = bgs)
 
-        # cv2.imshow("frame", frame)
-        # cv2.imshow("bgs", bgs)
-        # cv2.imshow("colorMask", colorMask)
+        cv2.imshow("frame", frame)
+        cv2.imshow("bgs", bgs)
+        cv2.imshow("colorMask", colorMask)
         # cv2.waitKey(0)
 
-        if(crop):
+        if(self.crop):
             fromCenter= False
             img = colorMask
-            r = cv2.selectROI(img, fromCenter) 
-            imCrop = img[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])]
+            # r = cv2.selectROI(img, fromCenter) 
+            # imCrop = img[int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])]
             imCrop = img[y1:(y1+y2), x1:(x1+x2)]
+            # imCrop = img[x1:(x1+x2), y1:(y1+y2)]
+            # cv2.imshow("cropped", imCrop)
+            # cv2.waitKey(0)
             crop = False
             camshift = True
             imCropMask = cv2.cvtColor(imCrop, cv2.COLOR_BGR2GRAY)
@@ -357,18 +462,18 @@ class Tennis(Sport):
 
             # cv2.destroyWindow("ROI selector")
 
-        if(camshift):
-            cv2.putText(frame,'Center roiBox',(0,10), font, 0.5,(0,255,0),2,cv2.LINE_AA)
-            cv2.putText(frame,'Estimated position',(0,30), font,0.5,(255,255,0),2,cv2.LINE_AA)
-            cv2.putText(frame,'Prediction',(0,50), font, 0.5,(0,0,255),2,cv2.LINE_AA)
-            add_count += 1
+        if(self.camshift):
+            cv2.putText(frame,'Center roiBox',(0,10), self.font, 0.5,(0,255,0),2,cv2.LINE_AA)
+            cv2.putText(frame,'Estimated position',(0,30), self.font,0.5,(255,255,0),2,cv2.LINE_AA)
+            cv2.putText(frame,'Prediction',(0,50), self.font, 0.5,(0,0,255),2,cv2.LINE_AA)
+            self.add_count += 1
             rgbr = np.floor_divide( colorMask , REDU)
             r,g,b = rgbr.transpose(2,0,1)
             l = his[r,g,b]
             maxl = l.max()
 
             aa=np.clip((1*l/maxl*255),0,255).astype(np.uint8)
-            (rb, roiBox) = cv2.CamShift(l, roiBox, termination)
+            (rb, roiBox) = cv2.CamShift(l, roiBox, self.termination)
 
             cv2.ellipse(frame, rb, (0, 255, 0), 2)
             xo=int(roiBox[0]+roiBox[2]/2)
@@ -376,15 +481,15 @@ class Tennis(Sport):
             # predicted, statePre, statePost, errorCovPre = kf.predict(int(xo), int(yo))
             error=(roiBox[3])
             if(yo<error or bgs.sum()<50 ):
-                predicted, mu, statePost, errorCovPre = kf.predict(int(xo), int(yo))
-                mu,P = kf.kal(mu,P,B,u,z=None)
+                predicted, mu, statePost, errorCovPre = self.kf.predict(int(xo), int(yo))
+                mu,P = self.kf.kal(mu,P,self.B,self.u,z=None)
                 #mu,P,pred= kalman(mu,P,A,Q,B,a,None,H,R)
                 m="None"
                 mm=False
             else:
                 # mu,P,pred= kalman(mu,P,A,Q,B,a,np.array([xo,yo]),H,R)
-                predicted, mu, statePost, errorCovPre = kf.predict(int(xo), int(yo))
-                mu,P = kf.kal(mu,P,B,u,z=np.array([xo,yo]))
+                predicted, mu, statePost, errorCovPre = self.kf.predict(int(xo), int(yo))
+                mu,P = self.kf.kal(mu,P,self.B,self.u,z=np.array([xo,yo]))
                 m="normal"
             mm=True
             if(mm):
@@ -399,8 +504,8 @@ class Tennis(Sport):
                 P2 = P
                 res2 = []
 
-                for _ in range(fps*2):
-                    mu2,P2 = kf.kal(mu2,P2,B,u,z=None)
+                for _ in range(self.fps*2):
+                    mu2,P2 = self.kf.kal(mu2,P2,self.B,self.u,z=None)
                     res2 += [(mu2,P2)]
 
                 
