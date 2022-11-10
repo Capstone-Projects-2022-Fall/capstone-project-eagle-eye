@@ -41,7 +41,7 @@ class Tennis(Sport):
     est_vel = [0,0]
     prev_est_vel = [0,0]
     bounce_count = 0
-    bounce_thresh = 10
+    bounce_thresh = 30
     custom_coordinates = None
     # for testing
     # custom_coordinates = np.array([
@@ -240,8 +240,12 @@ class Tennis(Sport):
             top_baseline = (court_lines.baseline_top[1] + court_lines.baseline_top[3]) / 2
             bottom_baseline = (court_lines.baseline_bottom[1] + court_lines.baseline_bottom[3]) / 2
         
-        ball_x = xy_In[0]*1000
-        ball_y = xy_In[1]*1000
+        # ball_x = xy_In[0]*1000
+        # ball_y = xy_In[1]*1000
+        ball_x = xy_In[0]
+        ball_y = xy_In[1]
+        # width = xy_In[2]*1000
+        # height = xy_In[3]*1000
         ball_pos = [ball_x, ball_y]
 
         # pts_src = np.array([
@@ -278,9 +282,11 @@ class Tennis(Sport):
             dvy = abs(self.est_vel[1] - self.prev_est_vel[1])
             change_vel = math.sqrt(dvx*dvx + dvy*dvy)
             if change_vel > self.bounce_thresh:
+                print(f"change is: {change_vel}, threshold is {self.bounce_thresh}")
                 self.bounce_count += 1
         # WOULD HAVE TO CHECK HOMOGRAPHY HERE --------
         # add ball bounce circle --------------------------------------------------------------------------
+                # center_coordinates = int(ball_y), int(ball_x)
                 center_coordinates = int(ball_x), int(ball_y)
                 # radius = 3
                 color = (255, 0, 0)
@@ -336,7 +342,7 @@ class Tennis(Sport):
         i=0
         param = [pts_src, frameCopy, i]
 
-        print("Eagle Eye was unable to automatically detect your cour parameters.\nPlease select the four corners of either the singles court or doubles court starting at the top left corner and going counter clockwise.\nTo select a coordinate press the left mouse button. If you need to clear all the coordinates press the right mouse button.\nThe system will only allow you to select 4 coordinates so for best results all 4 corners of the court need to be within the frame.\n To exit press 0")
+        print("Eagle Eye was unable to automatically detect your cour parameters.\nPlease select the four corners of either the singles court or doubles court starting at the top left corner and going counter clockwise.\nTo select a coordinate press the left mouse button. If you need to clear all the coordinates press the right mouse button.\n Note that the old coordinates will remain on the screen but just ignore them.\nThe system will only allow you to select 4 coordinates so for best results all 4 corners of the court need to be within the frame.\n To exit press 0")
         cv2.setMouseCallback('select coordinates', self.click_event, param=param)
         # wait for a key to be pressed to exit
         cv2.waitKey(0)
