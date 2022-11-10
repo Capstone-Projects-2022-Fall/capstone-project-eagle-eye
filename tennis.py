@@ -221,8 +221,8 @@ class Tennis(Sport):
     def computeLineCall(self, xy_In, frame, court_lines, custom_flag):
         # Read destination image.
         
-        os.path.join(os.getcwd(), 'court_configurations', 'court_reference.png')
-        img_dst = cv2.imread('/Users/tyler/Documents/GitHub/basketballVideoAnalysis/court-detection/court_configurations/court_reference.png')
+        img_dst = os.path.join(os.getcwd(), 'court_configurations', 'court_reference.png')
+        # img_dst = cv2.imread('/Users/tyler/Documents/GitHub/basketballVideoAnalysis/court-detection/court_configurations/court_reference.png')
 
         # Four corners of the court + mid-court circle point in destination image 
         # Start top-left corner and go anti-clock wise + mid-court circle point
