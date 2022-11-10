@@ -1,4 +1,5 @@
 import os
+import time
 import sys
 from court_reference import CourtReference
 from sport import Sport
@@ -12,6 +13,7 @@ from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 from scipy.ndimage import gaussian_filter
 from predictionKalmanfilter import KalmanFilter
+from pygame import mixer 
 
 REDU = 8
 def rgbh(xs, mask):
@@ -41,7 +43,18 @@ class Tennis(Sport):
     bounce_count = 0
     bounce_thresh = 10
     custom_coordinates = None
+    # for testing
+    custom_coordinates = np.array([
+        [761,536],     # top left corner
+        [28,849],     # bottom left
+        [1918,868],    # bottom right
+        [1178,540],     # top right rorner
+        ])  
+
     custom_lines = None
+    
+    
+    
     # REDU = 8
 
 
@@ -65,7 +78,8 @@ class Tennis(Sport):
     degree = np.pi/180
 
 
-    fps = 120
+    fps = 30
+    # fps = 120
     dt = 1/fps
     # t = np.arange(0,2.01,dt)
     noise = 3
@@ -205,6 +219,19 @@ class Tennis(Sport):
         return frame
 
     def computeLineCall(self, xy_In, frame, court_lines, custom_flag):
+        # Read destination image.
+        
+        os.path.join(os.getcwd(), 'court_configurations', 'court_reference.png')
+        img_dst = cv2.imread('/Users/tyler/Documents/GitHub/basketballVideoAnalysis/court-detection/court_configurations/court_reference.png')
+
+        # Four corners of the court + mid-court circle point in destination image 
+        # Start top-left corner and go anti-clock wise + mid-court circle point
+        pts_dst = np.array([
+            [421, 559],     # top left corner
+            [421, 2937],     # bottom left
+            [1244, 2937],    # bottom right
+            [1244, 559],     # top right corner
+            ])   
         if custom_flag:
             top_baseline = (court_lines[0][1] + court_lines[0][3]) / 2
             bottom_baseline = (court_lines[1][1] + court_lines[1][3]) / 2
@@ -251,13 +278,23 @@ class Tennis(Sport):
             change_vel = math.sqrt(dvx*dvx + dvy*dvy)
             if change_vel > self.bounce_thresh:
                 self.bounce_count += 1
+        # WOULD HAVE TO CHECK HOMOGRAPHY HERE ----------------------------------------------------------------------------------
                 if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
-                    cv2.putText(img=frame, text="OUT!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(500, 500))
+                    cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(500, 500))
+                    self.playSound()
                     print("OUT!!!")
         # update previous state trackers
         self.prev_est_vel = self.est_vel[:]
         self.prev_pos = ball_pos[:]
         return frame
+
+    def playSound(self):
+        file = os.path.join(os.getcwd(), 'sound', 'outCall.mp3')
+        mixer.init()
+        mixer.music.load(file)
+        mixer.music.play()
+        while mixer.music.get_busy():  # wait for music to finish playing
+            time.sleep(1)
 
     def userDefinedCoordinates(self, frame):
         if self.custom_coordinates is not None:
@@ -271,8 +308,8 @@ class Tennis(Sport):
                 np.concatenate([pts_src[0], pts_src[1]]),    # left line
                 np.concatenate([pts_src[3], pts_src[2]]),     # right line
                 ]) 
-  
         frame = cv2.polylines(frame, [pts_src], isClosed=True, color=[255,0,0], thickness=2)
+        cv2.imshow("normal", frame)
         return frame
 
     def selectCoordinates(self, frame):
