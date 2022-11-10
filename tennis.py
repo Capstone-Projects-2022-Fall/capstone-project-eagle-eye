@@ -44,12 +44,12 @@ class Tennis(Sport):
     bounce_thresh = 10
     custom_coordinates = None
     # for testing
-    custom_coordinates = np.array([
-        [761,536],     # top left corner
-        [28,849],     # bottom left
-        [1918,868],    # bottom right
-        [1178,540],     # top right rorner
-        ])  
+    # custom_coordinates = np.array([
+    #     [761,536],     # top left corner
+    #     [28,849],     # bottom left
+    #     [1918,868],    # bottom right
+    #     [1178,540],     # top right rorner
+    #     ])  
 
     custom_lines = None
     
@@ -232,6 +232,7 @@ class Tennis(Sport):
             [1244, 2937],    # bottom right
             [1244, 559],     # top right corner
             ])   
+
         if custom_flag:
             top_baseline = (court_lines[0][1] + court_lines[0][3]) / 2
             bottom_baseline = (court_lines[1][1] + court_lines[1][3]) / 2
@@ -278,10 +279,17 @@ class Tennis(Sport):
             change_vel = math.sqrt(dvx*dvx + dvy*dvy)
             if change_vel > self.bounce_thresh:
                 self.bounce_count += 1
-        # WOULD HAVE TO CHECK HOMOGRAPHY HERE ----------------------------------------------------------------------------------
+        # WOULD HAVE TO CHECK HOMOGRAPHY HERE --------
+        # add ball bounce circle --------------------------------------------------------------------------
+                center_coordinates = int(ball_x), int(ball_y)
+                # radius = 3
+                color = (255, 0, 0)
+                thickness = -1
+                cv2.circle(frame, center_coordinates, 10, color, thickness)
+        # -----------------------------------------------------------------------------------
                 if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
                     cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(500, 500))
-                    self.playSound()
+                    # self.playSound()
                     print("OUT!!!")
         # update previous state trackers
         self.prev_est_vel = self.est_vel[:]
