@@ -266,7 +266,7 @@ class Tennis(Sport):
 
     def userDefinedCoordinates(self, frame):
         if self.custom_coordinates is not None:
-            pts_src = self.custom_coordinates
+            frame = cv2.polylines(frame, [self.custom_coordinates], isClosed=True, color=[255,0,0], thickness=2)
         else: 
             pts_src = self.selectCoordinates(frame=frame)
             self.custom_coordinates = pts_src
@@ -276,14 +276,14 @@ class Tennis(Sport):
                 np.concatenate([pts_src[0], pts_src[1]]),    # left line
                 np.concatenate([pts_src[3], pts_src[2]]),     # right line
                 ]) 
-        frame = cv2.polylines(frame, [pts_src], isClosed=True, color=[255,0,0], thickness=2)
+            frame = cv2.polylines(frame, [pts_src], isClosed=True, color=[255,0,0], thickness=2)
         return frame
 
     def selectCoordinates(self, frame):
         # displaying the image
         frameCopy = copy.copy(frame) 
-        # cv2.imshow('Frame',cv2.resize(frameCopy,(1920,1080)))
         cv2.imshow('select coordinates', frameCopy)
+
         # setting mouse handler for the image
         # and calling the click_event() function
         pts_src = np.array([
@@ -301,37 +301,38 @@ class Tennis(Sport):
         cv2.waitKey(0)
         # close the window
         cv2.destroyAllWindows()
-        return pts_src
+        return param[0] #the pts_src that we passed to the callback function
 
-    def click_event(self, event, x, y, flags, params):
+    def click_event(self, event, x, y, flags, param):
         # checking for left mouse clicks
-        frame =  params[1]
+        frame =  param[1]
 
         if event == cv2.EVENT_LBUTTONDOWN:
-            if params[2] == 4: #if we have 4 clicks thats the 4 corners of the court so dont accept any more
+            if param[2] == 4: #if we have 4 clicks thats the 4 corners of the court so dont accept any more
                 return
-            print(x, ', ', y)
-            i = params[2]
-            params[0][i] = [x, y]
-            print(params[0][i])
+            i = param[2]
+            param[0][i] = [x, y]
+            print(param[0][i])
             # display the coordinates on another image so the user knows where they clicked 
             font = cv2.FONT_HERSHEY_SIMPLEX
             cv2.putText(frame, str(x) + ',' +
                         str(y), (x,y), font,
                         1, (255, 0, 0), 2)
+            param[2]+=1
             cv2.imshow('image', frame)
-            params[2]+=1
 
         # checking for right mouse clicks, maybe clear the coordinates in case you mess up?
         if event==cv2.EVENT_RBUTTONDOWN:
             # reset the coordinates and i, user can do this if they mess up/want to redo 
-            params[2] = 0
-            params[0] = np.array([
+            param[2] = 0
+            param[0] = np.array([
                 [0,0],    
                 [0,0],  
                 [0,0],  
                 [0,0], 
                 ])
+            print("cleared coordinates")
+
         # this isnt working...
     # # def rgbh(xs, mask):
     # #     def normhist(x): return x / np.sum(x)
