@@ -51,5 +51,4 @@ thop>=0.1.1  # FLOPs computation
 sympy
 sktime
 imutils
-PyMsgBox
-
+pygame
