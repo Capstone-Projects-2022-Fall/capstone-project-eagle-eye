@@ -49,8 +49,12 @@ class CourtDetector:
     filtered = self._filter_pixels(self.gray)
     # Detect lines using Hough transform
     horizontal_lines, vertical_lines = self._detect_lines(filtered)
+    if (horizontal_lines and vertical_lines) is None:
+        return []
     # Find transformation from reference court to frame`s court
     court_warp_matrix, game_warp_matrix, self.court_score = self._find_homography(horizontal_lines, vertical_lines)
+    if self.court_score is None: # if this is true then we went over the threshold for court detection and couldnt detect the court
+        return [] #return empty array as the lines, this gets around an error fron trying to compare none 
     self.court_warp_matrix.append(court_warp_matrix)
     self.game_warp_matrix.append(game_warp_matrix)
 
@@ -86,14 +90,20 @@ class CourtDetector:
         """
         minLineLength = 100
         maxLineGap = 20
+        lines = [None]
         # Detect all lines
         lines = cv2.HoughLinesP(gray, 1, np.pi / 180, 80, minLineLength=minLineLength, maxLineGap=maxLineGap)
         lines = np.squeeze(lines)
-        # Classify the lines using their slope
-        horizontal, vertical = self._classify_lines(lines)
-        # Merge lines that belong to the same line on frame
-        horizontal, vertical = self._merge_lines(horizontal, vertical)
-        return horizontal, vertical
+        if lines.any() is not None:
+            # cv2.imshow("lines", lines)
+            # cv2.waitKey(0)
+            # Classify the lines using their slope
+
+            horizontal, vertical = self._classify_lines(lines)
+            # Merge lines that belong to the same line on frame
+            horizontal, vertical = self._merge_lines(horizontal, vertical)
+            return horizontal, vertical
+        return None, None
 
   def _classify_lines(self, lines):
         """
@@ -175,33 +185,41 @@ class CourtDetector:
         max_inv_mat = None
         k = 0
         # Loop over every pair of horizontal lines and every pair of vertical lines
-        for horizontal_pair in list(combinations(horizontal_lines, 2)):
-            for vertical_pair in list(combinations(vertical_lines, 2)):
-                h1, h2 = horizontal_pair
-                v1, v2 = vertical_pair
-                # Finding intersection points of all lines
-                i1 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
-                i2 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
-                i3 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
-                i4 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
+        if len(horizontal_lines) >1 and len(vertical_lines) >1: #check that we even detected enough lines to begin with
+            for horizontal_pair in list(combinations(horizontal_lines, 2)):
+                for vertical_pair in list(combinations(vertical_lines, 2)):
+                    h1, h2 = horizontal_pair
+                    v1, v2 = vertical_pair
+                    # Finding intersection points of all lines
+                    i1 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
+                    i2 = line_intersection((tuple(h1[:2]), tuple(h1[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
+                    i3 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v1[0:2]), tuple(v1[2:])))
+                    i4 = line_intersection((tuple(h2[:2]), tuple(h2[2:])), (tuple(v2[0:2]), tuple(v2[2:])))
 
-                intersections = [i1, i2, i3, i4]
-                intersections = sort_intersection_points(intersections)
+                    intersections = [i1, i2, i3, i4]
+                    intersections = sort_intersection_points(intersections)
 
-                for i, configuration in self.court_reference.court_conf.items():
-                    # Find transformation
-                    matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)
-                    inv_matrix = cv2.invert(matrix)[1]
-                    # Get transformation score
-                    confi_score = self._get_confi_score(matrix)
+                    for i, configuration in self.court_reference.court_conf.items():
+                        # if k is > 10000 (arbitrary for now) we cant find a configuration
+                        if k%1000 == 0:
+                            print("Attempting to automatically detect court.")
+                        if(k > 10000):
+                            return None, None, None
+                        # Find transformation
+                        matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)
+                        inv_matrix = cv2.invert(matrix)[1]
+                        # Get transformation score
+                        confi_score = self._get_confi_score(matrix)
 
-                    if max_score < confi_score:
-                        max_score = confi_score
-                        max_mat = matrix
-                        max_inv_mat = inv_matrix
-                        self.best_conf = i
+                        if max_score < confi_score:
+                            max_score = confi_score
+                            max_mat = matrix
+                            max_inv_mat = inv_matrix
+                            self.best_conf = i
 
-                    k += 1
+                        k += 1
+        else: #if we didnt then just return none
+            return None, None, None
         return max_mat, max_inv_mat, max_score
 
   def _get_confi_score(self, matrix):
