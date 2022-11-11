@@ -282,8 +282,8 @@ class Tennis(Sport):
     def selectCoordinates(self, frame):
         # displaying the image
         frameCopy = copy.copy(frame) 
-        cv2.imshow('Frame',cv2.resize(frameCopy,(1920,1080)))
-
+        # cv2.imshow('Frame',cv2.resize(frameCopy,(1920,1080)))
+        cv2.imshow('select coordinates', frameCopy)
         # setting mouse handler for the image
         # and calling the click_event() function
         pts_src = np.array([
