@@ -9,8 +9,6 @@ import torch
 import math
 import numpy as np
 import copy
-from shapely.geometry import Point
-from shapely.geometry.polygon import Polygon
 from scipy.ndimage import gaussian_filter
 from predictionKalmanfilter import KalmanFilter
 from pygame import mixer 
