@@ -142,23 +142,6 @@ class Tennis(Sport):
         print(f'Using device {device}')
         return dtype
 
-    def get_video_properties(self, video):
-        # Find OpenCV version
-        (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
-
-        # get videos properties
-        if int(major_ver) < 3:
-            fps = video.get(cv2.cv.CV_CAP_PROP_FPS)
-            length = int(video.get(cv2.cv.CAP_PROP_FRAME_COUNT))
-            v_width = int(video.get(cv2.cv.CAP_PROP_FRAME_WIDTH))
-            v_height = int(video.get(cv2.cv.CAP_PROP_FRAME_HEIGHT))
-        else:
-            fps = video.get(cv2.CAP_PROP_FPS)
-            length = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-            v_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-            v_height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        return fps, length, v_width, v_height
-
     def detectCourt(self, frame):
         """Display any error that is raised in a pop up window and restart the main loop
         
@@ -246,7 +229,7 @@ class Tennis(Sport):
                 cv2.circle(frame, center_coordinates, 10, color, thickness)
                 if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
                     cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(0,255,255), org=(0, 0))
-                    self.playSound()
+                    # self.playSound()
                     print("OUT!!!")
         # update previous state trackers
         self.prev_est_vel = self.est_vel[:]
