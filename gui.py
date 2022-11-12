@@ -115,7 +115,7 @@ class App():
         """Run the detect script in live mode"""
         weights = self.sport_selector()
         try:
-            detect.run(source=0, weights=weights)
+            detect.run(sport_flag=self.sport_flag, source=0, weights=weights)
         except Exception as e:
             self.error_message(e)
 
