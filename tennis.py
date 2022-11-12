@@ -178,7 +178,7 @@ class Tennis(Sport):
             return frame
         else:
             # trigger a function to have the user pick the court 
-            # print("NO COURT DETECTED!")
+            print("NO COURT DETECTED!")
             return self.userDefinedCoordinates(frame=frame)
     
     def trackCourt(self, frame):
@@ -190,7 +190,6 @@ class Tennis(Sport):
             return frame
         else:
             # trigger a function to have the user pick the court 
-            # print("NO COURT DETECTED!")
             return self.userDefinedCoordinates(frame=frame)
 
     def lineCall(self, xy_In, frame):
@@ -255,7 +254,13 @@ class Tennis(Sport):
         return frame
 
     def playSound(self):
-        file = os.path.join(os.getcwd(), 'sound', 'outCall.mp3')
+        # need this check for windows, doesnt seem to want to work with just the relative path on my machine
+        if os.getcwd().endswith('yolov5'):
+            os.chdir("..")
+            file = os.path.join(os.getcwd(), 'sound', 'outCall.mp3')
+            os.chdir("yolov5")
+        else:
+            file = os.path.join(os.getcwd(), 'sound', 'outCall.mp3')
         mixer.init()
         mixer.music.load(file)
         mixer.music.play()
