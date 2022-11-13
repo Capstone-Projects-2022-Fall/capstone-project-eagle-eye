@@ -207,7 +207,7 @@ class CourtDetector:
                         # if k is > 10000 (arbitrary for now) we cant find a configuration
                         if k%1000 == 0:
                             print("Attempting to automatically detect court.")
-                        if(k > 1):
+                        if(k > 10000):
                             return None, None, None
                         # Find transformation
                         matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)
