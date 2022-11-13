@@ -27,6 +27,8 @@ Any Temple University member should have access to these documents through these
 - [Accuracy Acceptance Test](https://tuprd.sharepoint.com/:x:/s/EagleEye/EWdHx1v9BtlFtRsry1cyuTQBJgaHO0FFUWlDnYv1JoK5iQ?e=4JadFO)
 - [GUI Acceptance Test](https://tuprd.sharepoint.com/:x:/s/EagleEye/EYXqKU9iX8BMiINHc47md6kBV9MAz1nlXfk62hJFckyXQg?e=BbGhvO)
 
+Contact Tyler Hyde at tuj66923@temple.edu for technical questions
+
 **Notes**
 
 - To exit live view make sure that the window displaying the video is active (i.e. click on it) and press and hold the `q` key until the window closes, you can then continue to use Eagle Eye as you normally would.
