@@ -152,7 +152,7 @@ class Tennis(Sport):
                 thickness = -1
                 cv2.circle(frame, center_coordinates, 10, color, thickness)
                 if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
-                    cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0,255,255), org=(ball_x, ball_y))
+                    cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3, color=(0,255,255), org=(ball_x, ball_y))
                     self.playSound()
                     print("OUT!!!")
         # update previous state trackers
