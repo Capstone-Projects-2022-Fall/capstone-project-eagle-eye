@@ -159,6 +159,7 @@ class App():
     def do_cleanup(self):
         """Resets any variables that have been set"""
         self.video_infile_name == ""
+        self.sport_flag=0
     
     def error_message(self, error):
         """Display any error that is raised in a pop up window and restart the main loop
@@ -167,6 +168,7 @@ class App():
             error (Exception): The error that was raised or a string. 
         """
         messagebox.showerror(title='Error Message', message=f"{error}")
+        self.do_cleanup()
         self.root.mainloop()
 
     def sport_selector(self):

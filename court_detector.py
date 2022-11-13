@@ -102,6 +102,8 @@ class CourtDetector:
             horizontal, vertical = self._classify_lines(lines)
             # Merge lines that belong to the same line on frame
             horizontal, vertical = self._merge_lines(horizontal, vertical)
+            if (horizontal and vertical) == None:
+                return None, None
             return horizontal, vertical
         return None, None
 
@@ -169,6 +171,8 @@ class CourtDetector:
                         xj, yj = line_intersection(((x3, y3), (x4, y4)), ((xl, yl), (xr, yr)))
 
                         dx = abs(xi - xj)
+                        if j > 50:
+                            return None, None #threshold for lines that are probably false positives. webcam seems to get stuck here
                         if dx < 10:
                             points = sorted([(x1, y1), (x2, y2), (x3, y3), (x4, y4)], key=lambda x: x[1])
                             line = np.array([*points[0], *points[-1]])
@@ -203,7 +207,7 @@ class CourtDetector:
                         # if k is > 10000 (arbitrary for now) we cant find a configuration
                         if k%1000 == 0:
                             print("Attempting to automatically detect court.")
-                        if(k > 10000):
+                        if(k > 1):
                             return None, None, None
                         # Find transformation
                         matrix, _ = cv2.findHomography(np.float32(configuration), np.float32(intersections), method=0)

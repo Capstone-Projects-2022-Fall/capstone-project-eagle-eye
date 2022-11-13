@@ -31,6 +31,7 @@ class Tennis(Sport):
     bounce_count = 0
     bounce_thresh = 30
     custom_coordinates = None
+    custom_lines = None
     # for testing
     # custom_coordinates = np.array([
     #     [761,536],     # top left corner
@@ -39,10 +40,20 @@ class Tennis(Sport):
     #     [1178,540],     # top right rorner
     #     ])  
 
-    custom_lines = None
    
     def __init__(self, sportname):
         super().__init__(sportname)
+
+    def reset(self):
+        self.selfcourt_lines = None
+        self.court_reference = None
+        self.prev_pos = [0, 0]
+        self.est_vel = [0,0]
+        self.prev_est_vel = [0,0]
+        self.bounce_count = 0
+        self.bounce_thresh = 30
+        self.custom_coordinates = None
+        self.custom_lines = None
 
     def printname(self):
         return self.sportname
@@ -72,6 +83,7 @@ class Tennis(Sport):
         Args: 
             frame (Array): A frame or image that we want to detect court lines on
         """
+        self.reset() #if we are detecting the court we wnat a clean slate
         court_detector = CourtDetector()
         frame=frame
         lines = court_detector.detect(frame)
