@@ -8,12 +8,10 @@ to your local virtual environment so activate it and run the command `pip instal
 # Instructions For Use
 
 **Windows Instructions**
-
-Unzip the included WindowsEagleEye.zip file and navigate to the EagleEye.exe file. Double click the .exe and a terminal window will appear. Windows my alert you that the exe is dangerous and if so click `run anyway`. Choose the mode and desired sport and click execute. 
+Download and unzip the [WindowsEagleEye.zip](https://tuprd.sharepoint.com/:u:/s/EagleEye/EZXFDJXzZSRDk5I9dwcPEHUBOd3CoBiFnWjkQhwt94-DEg?e=UKYGbw) file and navigate to the EagleEye.exe file. Double click the .exe and a terminal window will appear. Windows my alert you that the exe is dangerous and if so click `run anyway`. Choose the mode and desired sport and click execute. 
 
 **Mac Instructions**
-
-Unzip the included MacEagleEye.zip. Before you can run an unknown application you may need to disable Gatekeeper in MacOS. To do so open a new terminal and type `sudo spctl --master-disable`. You will then be prompted for your password, enter it and press enter. Gatekeeper is now disabled across all of MacOS (to re enable it simply run the command `spctl --enable`). Navigate to the EagleEye folder, right click on it and select `New terminal at folder`. To execute the program run the command `./EagleEye`. Choose the mode and desired sport and click execute.
+Download and unzip the [MacEagleEye.zip](https://tuprd.sharepoint.com/:u:/s/EagleEye/EVWNe68L9LZGobgocKY4HHMBtRVB8Edu_URxnj--r-q8Zg?e=XyKXjP). Before you can run an unknown application you may need to disable Gatekeeper in MacOS. To do so open a new terminal and type `sudo spctl --master-disable`. You will then be prompted for your password, enter it and press enter. Gatekeeper is now disabled across all of MacOS (to re enable it simply run the command `spctl --enable`). Navigate to the EagleEye folder, right click on it and select `New terminal at folder`. To execute the program run the command `./EagleEye`. Choose the mode and desired sport and click execute.
 
 **General Instructions**
 
@@ -23,6 +21,13 @@ Eagle Eye has two main modes: Live and Prerecorded. There are also several sport
 
 Select either prerecorded or live option from the gui and select execute. Eagle Eye will attempt to automatically find the lines on the court. If it cannot you will be prompted to select the four corners of the court (either including or excluding the doubles alley depending on whether you are playing singles or doubles.). It is essential that you select the corners starting in the top left corner and moving counter clockwise (top left, bottom left, bottom right, top right) otherwise the system will not porperly lay out the court. Eagle Eye will only allow you to input 4 coordinates so if you mistakenly click you can clear the saved coordinates from the back end by pressing the right mouse button. Note that the old coordinates will remain on the screen but they can be ignored. Once you are satisfied with your selection press the 0 key and they will be saved. You will now have automated line calls for balls that are over either base line. 
 
+**Acceptance Tests**
+
+Any Temple University member should have access to these documents through these links:
+- [Accuracy Acceptance Test](https://tuprd.sharepoint.com/:x:/s/EagleEye/EWdHx1v9BtlFtRsry1cyuTQBJgaHO0FFUWlDnYv1JoK5iQ?e=4JadFO)
+- [GUI Acceptance Test](https://tuprd.sharepoint.com/:x:/s/EagleEye/EYXqKU9iX8BMiINHc47md6kBV9MAz1nlXfk62hJFckyXQg?e=BbGhvO)
+
+Contact Tyler Hyde at tuj66923@temple.edu for technical questions
 
 **Notes**
 
