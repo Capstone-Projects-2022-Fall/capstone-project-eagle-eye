@@ -59,6 +59,7 @@ class App():
     soccer_class = Soccer("Soccer")
     basketball_class = BasketBall("Basketball")
     sport_flag = 0
+    prerecorded_flag = 0
     baseball_class = Baseball("Baseball")
 
     def __init__(self, width, height):
@@ -114,6 +115,7 @@ class App():
     def run_live(self):
         """Run the detect script in live mode"""
         weights = self.sport_selector()
+        self.prerecorded_flag = 0
         try:
             detect.run(sport_flag=self.sport_flag, source=0, weights=weights)
         except Exception as e:
@@ -127,8 +129,9 @@ class App():
         weights = self.sport_selector()
         # run script with prerecorded video
         weights = self.resource_path(weights)
+        self.prerecorded_flag = 1
         try:
-            detect.run(sport_flag=self.sport_flag, source=self.video_infile_name, view_img=True, weights=weights)
+            detect.run(sport_flag=self.sport_flag, source=self.video_infile_name, view_img=True, weights=weights, prerecorded_flag=self.prerecorded_flag)
         except Exception as e:
             self.error_message(e)
         latest_file = self.get_latest_file()
@@ -160,6 +163,7 @@ class App():
         """Resets any variables that have been set"""
         self.video_infile_name == ""
         self.sport_flag=0
+        self.prerecorded_flag = 0
     
     def error_message(self, error):
         """Display any error that is raised in a pop up window and restart the main loop

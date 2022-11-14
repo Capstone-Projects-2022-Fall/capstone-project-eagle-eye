@@ -111,16 +111,16 @@ class Tennis(Sport):
             # trigger a function to have the user pick the court 
             return self.userDefinedCoordinates(frame=frame)
 
-    def lineCall(self, xy_In, frame):
+    def lineCall(self, xy_In, frame, prerecorded_flag):
         if self.court_reference is not None:
-            return self.computeLineCall(xy_In=xy_In, frame=frame, court_lines = self.court_reference, custom_flag=0)
+            return self.computeLineCall(xy_In=xy_In, frame=frame, court_lines = self.court_reference, custom_flag=0, prerecorded_flag=prerecorded_flag)
         elif self.custom_lines is not None:
             # use the custom lines...
-            return self.computeLineCall(xy_In=xy_In, frame=frame, court_lines = self.custom_lines, custom_flag=1)
+            return self.computeLineCall(xy_In=xy_In, frame=frame, court_lines = self.custom_lines, custom_flag=1, prerecorded_flag=prerecorded_flag)
         # return the frame no matter what, if niether condition wasnt met then its just the same frame that came in
         return frame
 
-    def computeLineCall(self, xy_In, frame, court_lines, custom_flag):
+    def computeLineCall(self, xy_In, frame, court_lines, custom_flag, prerecorded_flag):
         # Read destination image.
         
         img_dst = os.path.join(os.getcwd(), 'court_configurations', 'court_reference.png')
@@ -165,7 +165,8 @@ class Tennis(Sport):
                 cv2.circle(frame, center_coordinates, 10, color, thickness)
                 if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
                     cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3, color=(0,255,255), org=(ball_x, ball_y))
-                    self.playSound()
+                    if not prerecorded_flag: #dont want to call the sound on prerecorded videos
+                        self.playSound()
                     print("OUT!!!")
         # update previous state trackers
         self.prev_est_vel = self.est_vel[:]
