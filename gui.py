@@ -58,9 +58,11 @@ class App():
     tennis_class= Tennis("Tennis")
     soccer_class = Soccer("Soccer")
     basketball_class = BasketBall("Basketball")
+    baseball_class = Baseball("Baseball")
     sport_flag = 0
     prerecorded_flag = 0
-    baseball_class = Baseball("Baseball")
+    camera_mode_flag = IntVar()
+    camera_mode_checkbutton = Checkbutton(root, text="Two Camera Mode", variable=camera_mode_flag)
 
     def __init__(self, width, height):
         """Sets up instance variables
@@ -81,6 +83,7 @@ class App():
         # set defaults for the dropdown menus 
         self.mode_checked.set("Live")
         self.sport_checked.set("Default")
+        self.camera_mode_flag.set(0)
         # Set window title
         self.root.title('Eagle Eye')
         # Enter button
@@ -93,6 +96,8 @@ class App():
         self.mode_dropdown.grid(row=7, column=2)
         tk.Label(self.root, bg='#ffffff', text="Choose Sport:", fg='#000000', font=('Arial', 12)).grid(row=8, column=1)
         self.sport_dropdown.grid(row=8, column=2)
+        # add camera mode checkbox 
+        self.camera_mode_checkbutton.grid(row=9, column=2)
         # add buttons to grid
         button_enter.grid(row=16, column=2)
         button_exit.grid(row = 17, column = 2)
@@ -114,10 +119,10 @@ class App():
 
     def run_live(self):
         """Run the detect script in live mode"""
-        weights = self.sport_selector()
+        weights, camera_mode = self.sport_selector()
         self.prerecorded_flag = 0
         try:
-            detect.run(sport_flag=self.sport_flag, source=0, weights=weights)
+            detect.run(sport_flag=self.sport_flag, source=0, weights=weights, camera_mode_flag=camera_mode)
         except Exception as e:
             self.error_message(e)
 
@@ -182,19 +187,21 @@ class App():
         """
         mode = self.sport_checked.get()
         if mode == "Tennis":
+            if self.camera_mode_flag.get(): 
+                self.sport_flag = 1
+                return self.tennis_class.model, 1 #if 2 camera mode is set we ONLY want it to work with tennis so only return true here
             self.sport_flag = 1
-            return self.tennis_class.model
+            return self.tennis_class.model, 0
         elif mode == "Soccer":
             self.sport_flag = 2
-            return self.soccer_class.model
+            return self.soccer_class.model, 0
         elif mode == "Basketball":
             self.sport_flag = 3
-            return self.basketball_class.model
+            return self.basketball_class.model, 0
         elif mode == "Baseball":
-            """self.sport_flag = 4 """
-            return self.baseball_class.model
+            return self.baseball_class.model, 0
         elif mode == "Default":
-            return 'yolov5s.pt'
+            return 'yolov5s.pt', 0
 
     def get_latest_file(self):
         """Returns the latest file from the runs folder in yolo, if that doesnt exist ask the user to provide its location.
