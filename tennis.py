@@ -159,19 +159,19 @@ class Tennis(Sport):
                 print(f"change is: {change_vel}, threshold is {self.bounce_thresh}")
                 self.bounce_count += 1
                 # add ball bounce circle
-                center_coordinates = int(ball_x), int(ball_y)
-                color = (255, 0, 0)
-                thickness = -1
-                cv2.circle(frame, center_coordinates, 10, color, thickness)
+                # center_coordinates = int(ball_x), int(ball_y)
+                # color = (255, 0, 0)
+                # thickness = -1
+                # cv2.circle(frame, center_coordinates, 10, color, thickness)
                 if camera_mode: #we are only calling the bottom half of the court if the camera flag is set (basically we are just calling the baseline)
                     if (ball_y > bottom_baseline): 
-                        cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3, color=(0,255,255), org=(ball_x, ball_y))
+                        cv2.putText(img=frame, text="OUT!!!", thickness=5, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(32,255,0), org=(500, 500))
                         if not prerecorded_flag: #dont want to call the sound on prerecorded videos
                             self.playSound()
                         print("OUT!!!")
                 else: 
                     if (ball_y < top_baseline or ball_y > bottom_baseline): #if we are here the ball has "bounced"
-                        cv2.putText(img=frame, text="OUT!!!", fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=3, color=(0,255,255), org=(ball_x, ball_y))
+                        cv2.putText(img=frame, text="OUT!!!", thickness=5, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=10, color=(32,255,0), org=(500, 500))
                         if not prerecorded_flag: #dont want to call the sound on prerecorded videos
                             self.playSound()
                         print("OUT!!!")
