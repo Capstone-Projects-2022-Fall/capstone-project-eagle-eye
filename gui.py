@@ -131,7 +131,7 @@ class App():
         # get the file from the user
         self.get_infile()
         # get the current sport selected
-        weights, camera_mode = self.sport_selector()
+        weights = self.sport_selector()
         # run script with prerecorded video
         weights = self.resource_path(weights)
         self.prerecorded_flag = 1
