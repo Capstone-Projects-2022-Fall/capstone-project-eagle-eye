@@ -158,7 +158,7 @@ class Tennis(Sport):
             if change_vel > self.bounce_thresh:
                 print(f"change is: {change_vel}, threshold is {self.bounce_thresh}")
                 self.bounce_count += 1
-                # add ball bounce circle
+                # add ball bounce circle TAKEN OUT FOR NOW, WAS CAUSING PROBLEMS
                 # center_coordinates = int(ball_x), int(ball_y)
                 # color = (255, 0, 0)
                 # thickness = -1
