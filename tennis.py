@@ -191,8 +191,8 @@ class Tennis(Sport):
         mixer.init()
         mixer.music.load(file)
         mixer.music.play()
-        while mixer.music.get_busy():  # wait for music to finish playing
-            time.sleep(1)
+        # while mixer.music.get_busy():  # wait for music to finish playing
+        #     time.sleep(1)
 
     def userDefinedCoordinates(self, frame):
         if self.custom_coordinates is not None:
