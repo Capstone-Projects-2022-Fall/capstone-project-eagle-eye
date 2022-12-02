@@ -108,7 +108,7 @@ class tennisDetection:
                 #cv2.line(frame, (45, 70), (235, 70), (0, 0, 0), 22)
                 # print()
                 cv2.putText(
-                    frame_in, f"Speed: {round(averageSpeed, 2)} m/s", (50, 75), cv2.FONT_HERSHEY_COMPLEX, 0.6, (0, 255, 220), 2) 
+                    frame_in, f"Speed: {round((averageSpeed*10), 2)} m/s", (50, 75), cv2.FONT_HERSHEY_COMPLEX, 0.6, (0, 255, 220), 2) 
                 
 
                 #print("AVERAGE SPEED: " + str(round(averageSpeed, 2)))
