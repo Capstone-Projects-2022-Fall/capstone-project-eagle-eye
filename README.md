@@ -2,16 +2,16 @@
 Eagle Eye is a simple, easy to use tennis line call system that is deployed while playing to track the ball and make automated line calls. The Eagle Eye system consists of a camera or recording device and the application installed on a laptop. The camera can be mounted on one end of the court on either a tripod or a mount attached to the surrounding fence of a tennis court. Connected to the camera is an HDMI to USB capture card which converts the cameras HDMI signal to a USB signal that the laptop can use. The laptop is running the Eagle Eye program and serves as both the live feed monitor that displays what it is seeing and the speed of each shot and the audio output device for the audible cues for when a ball is determined to be out. The Eagle Eye app will handle the flight tracking and speed calculations for the ball, make judgements on whether the ball flies out-of-bounds, and present the video feed and calculations for the user. Additionally Eagle Eye can identify and track balls in other sports including soccer, basketball, and baseball. 
 
 # Installation
-To install Eagle Eye clone the main branch from git as you would with any other git repo. Next you will need to clone our fork of the YOLO repo. First run the command `https://github.com/tyler3490/yolov5.git`, then you will need to install the requirements 
+To install Eagle Eye clone the main branch from git as you would with any other git repo. Next you will need to clone our fork of the YOLO repo. First change directory to the yolov5 folder in the repo you just cloned. Then clone our fork of yolo using this url: `https://github.com/tyler3490/yolov5.git`. Then you will need to install the requirements 
 to your local virtual environment so activate it and run the command `pip install -r requirements.txt`. The Eagle Eye gui should now work on your machine. 
 
 # Instructions For Use
 
 **Windows Instructions**
-Download and unzip the [Windows EagleEye zip file](https://tuprd.sharepoint.com/:u:/s/EagleEye/EZhImvRwypJAlZ20L79xuSwBwV6Gj6-kyhjjL553XWDvUQ?e=4rELO8) file and navigate to the EagleEye.exe file. Double click the .exe and a terminal window will appear. Windows my alert you that the exe is dangerous and if so click `run anyway`. Choose the mode and desired sport and click execute. 
+Download and unzip the [Windows EagleEye zip file](https://tuprd.sharepoint.com/:u:/s/EagleEye/ERmmufpG5LdHsfkC9qP7IBIBYO-6fMzBRczJbHIWaXbTVQ?e=S8wX8N) file and navigate to the EagleEye.exe file. Double click the .exe and a terminal window will appear. Windows my alert you that the exe is dangerous and if so click `run anyway`. Choose the mode and desired sport and click execute. 
 
 **Mac Instructions**
-Download and unzip the [Mac EagleEye zip file](https://tuprd.sharepoint.com/:u:/s/EagleEye/EcaPaMtU6-hAmJg1mORujowBKVDLetoLan7Z6HjQLirF_Q?e=bwGqeC). Before you can run an unknown application you may need to disable Gatekeeper in MacOS. To do so open a new terminal and type `sudo spctl --master-disable`. You will then be prompted for your password, enter it and press enter. Gatekeeper is now disabled across all of MacOS (to re enable it simply run the command `spctl --enable`). Navigate to the EagleEye folder, right click on it and select `New terminal at folder`. To execute the program run the command `./EagleEye`. Choose the mode and desired sport and click execute.
+Download and unzip the [Mac EagleEye zip file](https://tuprd.sharepoint.com/:u:/s/EagleEye/EXOsZF7Y68RLiBRXGDTNRIgBaT9a195ZWjb9sqFOCzeUtQ?e=0y6xQp). Before you can run an unknown application you may need to disable Gatekeeper in MacOS. To do so open a new terminal and type `sudo spctl --master-disable`. You will then be prompted for your password, enter it and press enter. Gatekeeper is now disabled across all of MacOS (to re enable it simply run the command `spctl --enable`). Navigate to the EagleEye folder, right click on it and select `New terminal at folder`. To execute the program run the command `./EagleEye`. Choose the mode and desired sport and click execute.
 
 **General Instructions**
 
@@ -28,6 +28,14 @@ Any Temple University member should have access to these documents through these
 - [GUI Acceptance Test](https://tuprd.sharepoint.com/:x:/s/EagleEye/EYXqKU9iX8BMiINHc47md6kBV9MAz1nlXfk62hJFckyXQg?e=BbGhvO)
 
 Contact Tyler Hyde at tuj66923@temple.edu for technical questions
+
+**Known Issues**
+- In tennis mode there is an error that can happen due to trying to draw the prediction circle with bad input that will cause the program to crash.
+- The automatic court detection does not work reliably in most cases and works best with broadcast footage. 
+- The basketball, baseball, and soccer models are still not good enough for reliable use. 
+- Live mode court detection can get thrown into a loop when it gets a false positive.
+- On windows machines you are unable to resize windows so when the program is running the user may or may not see both the raw and processed video depending on the size of the original video. 
+- Mac executable may not work on all machines. During testing we had to build it on both of our groups mac machines.
 
 **Notes**
 
